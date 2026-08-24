@@ -23,9 +23,11 @@ spring:
 
 app:
   jwt:
-    secret: ${JWT_SECRET:}
+    secret: ${JWT_SECRET:dev-only-secret-please-override-me-with-32-bytes!}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}
   seed-admin: ${SEED_ADMIN:true}
   admin:
     email: ${ADMIN_EMAIL:admin@digisec.local}
     password: ${ADMIN_PASSWORD:ChangeMe123!}
+  mail:
+    frontend-url: ${FRONTEND_URL:http://localhost:5173}
