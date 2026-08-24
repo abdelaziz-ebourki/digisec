@@ -28,6 +28,7 @@ public class MailService {
     @Async
     public void sendVerificationEmail(User user, String rawToken) {
         String link = frontendUrl + "/verify?token=" + rawToken;
+        log.debug("Verification link for {}: {}", user.getEmail(), link);
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
