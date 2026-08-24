@@ -1,0 +1,193 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.activity-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    background: #fafafa;
+}
+
+.activity-item h2 {
+    margin: 0 0 10px;
+    font-size: 1.5em;
+    color: #FFA500;
+}
+
+.activity-item p {
+    margin: 10px 0;
+    font-size: 1em;
+    line-height: 1.6;
+    color: #555;
+}
+
+.activity-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#add-activity {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 25px;
+    background-color: #c9610b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#add-activity:hover {
+    background-color: #b7550a;
+}
+
+.hidden {
+    display: none;
+}
+
+#add-form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#add-form h2 {
+    text-align: center;
+    color: #FFA500;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+#add-form label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #555;
+}
+
+#add-form input,
+#add-form textarea {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+#add-form textarea {
+    resize: vertical;
+    height: 120px;
+}
+
+#add-form button {
+    background-color: white;
+    color: #FFA500;
+    padding: 12px 25px;
+    border: 2px solid #FFA500;
+    border-radius: 6px 32px;
+    box-shadow: 10px -8px #d78c01;
+    font-size: 18px;
+    font-weight: bold;
+    transition: 0.8s;
+    width: 50%;
+    margin: 20px auto;
+    cursor: pointer;
+}
+
+#add-form button:hover {
+    background-color: #df9201;
+    color: #2f3e46;
+}
+
+#add-form button#cancel-form {
+    background-color: #8f8c8a;
+    color: white;
+}
+
+#add-form button#cancel-form:hover {
+    background-color: #7a7573;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+#sort-activity {
+    background-color: #c9610b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+#sort-activity:hover {
+    background-color: #b7550a;
+}
+
+.delete-form {
+    margin-top: 10px;
+}
+
+.delete-btn {
+    background-color: white;
+    color: #FFA500;
+    padding: 12px 25px;
+    border: 2px solid #FFA500;
+    border-radius: 6px 32px;
+    box-shadow: 10px -8px #d78c01;
+    font-size: 18px;
+    font-weight: bold;
+    transition: 0.8s;
+    width: 50%;
+    margin: 20px auto;
+    cursor: pointer;;
+}
+
+.delete-btn:hover {
+    background-color: #df9201;
+    color: #2f3e46;
+}
+
+span {
+    color: #FFA500;
+}
+}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vérification d'email</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            height: 100vh;
+            max-height: 600px;
+        }
+
+        .container {
+            background: #ffffff;
+            max-width: 550px;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 0 8px black;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2em;
+            margin-bottom: 1em;
+            color: #333;
+        }
+
+        span {
+            color: #FFA500;
+        }
+
+        p {
+            font-size: 1em;
+            color: #666;
+            margin-bottom: 1.5em;
+        }
+
+        .verify-button {
+            display: inline-block;
+            background-color: white;
+            color: #FFA500;
+            padding: 12px 25px;
+            border: 2px solid #FFA500;
+            border-radius: 6px 32px;
+            box-shadow: 10px -8px #d78c01;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.8s;
+        }
+
+        .verify-button:hover {
+            background-color: #df9201;
+            color: #2f3e46;
+        }
+
+        .container {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2><span>V</span>érification d'<span>e</span>mail</h2>
+        <p>Bonjour {{first_name}},</p>
+        <p>Merci de vous être inscrit ! Veuillez vérifier votre email en cliquant sur le bouton ci-dessous :</p> 
+        <a href="{{verification_link}}" class="verify-button">Vérifier l'email</a> <br> <br>
+        <p>Si vous n'avez pas effectué cette inscription, veuillez ignorer cet email.</p>
+        <p>&copy; 2024 DIGISEC. Tous droits réservés.</p>
+    </div>
+</body>
+</html>
