@@ -39,4 +39,4 @@ Runs on `http://localhost:5173`; `/api/*` requests are proxied to the backend.
 
 ## Branching
 
-Work happens on the long-lived `rewrite` branch via feature branches (`rewrite/api-auth`, `rewrite/ui-layout`, ...). `main` holds the legacy PHP application until the rewrite reaches parity.
+Work happens on the long-lived `rewrite/main` branch via feature branches (`rewrite/api-auth`, `rewrite/ui-layout`, ...). `main` holds the legacy PHP application until the rewrite reaches parity.
