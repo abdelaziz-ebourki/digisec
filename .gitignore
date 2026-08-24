@@ -13,3 +13,5 @@ api/target/
 
 # Logs
 *.log
+.vscode/
+.idea/
