@@ -25,3 +25,7 @@ app:
   jwt:
     secret: ${JWT_SECRET:}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+  seed-admin: ${SEED_ADMIN:true}
+  admin:
+    email: ${ADMIN_EMAIL:admin@digisec.local}
+    password: ${ADMIN_PASSWORD:ChangeMe123!}
