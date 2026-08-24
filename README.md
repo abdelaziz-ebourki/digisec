@@ -12,7 +12,7 @@ Club web application — monorepo containing the React frontend (`ui/`) and the 
 ## Prerequisites
 
 - Node.js 22+
-- JDK 21+ (Maven Wrapper included, no global Maven needed)
+- JDK 25+ (Maven Wrapper included, no global Maven needed)
 - MySQL 8+
 
 ## Development
