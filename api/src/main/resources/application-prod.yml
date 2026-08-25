@@ -1,0 +1,11 @@
+spring:
+  jpa:
+    show-sql: false
+
+logging:
+  level:
+    root: INFO
+    com.digisec: INFO
+
+app:
+  seed-admin: ${SEED_ADMIN:false}
