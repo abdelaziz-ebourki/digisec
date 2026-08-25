@@ -32,7 +32,7 @@ describe('Register page', () => {
 
   it('submits the full payload and shows the confirmation screen', async () => {
     mockRegister.mockResolvedValue({ message: 'Registration successful' })
-    const user = userEvent.setup()
+    const user = userEvent.setup({ delay: null })
     render(
       <MemoryRouter>
         <Register />
@@ -61,7 +61,7 @@ describe('Register page', () => {
         data: { detail: 'Duplicate', errors: { email: 'An account with this email already exists' } },
       },
     })
-    const user = userEvent.setup()
+    const user = userEvent.setup({ delay: null })
     render(
       <MemoryRouter>
         <Register />
@@ -77,7 +77,7 @@ describe('Register page', () => {
 
   it('normalizes the email to lowercase before submitting', async () => {
     mockRegister.mockResolvedValue({ message: 'ok' })
-    const user = userEvent.setup()
+    const user = userEvent.setup({ delay: null })
     render(
       <MemoryRouter>
         <Register />
