@@ -18,3 +18,21 @@ export interface PagedResponse<T> {
   totalElements: number
   totalPages: number
 }
+
+export interface PostResponse {
+  id: number
+  authorId: number
+  authorFirstName: string
+  title: string
+  content: string
+  createdAt: string
+}
+
+export interface CommentResponse {
+  id: number
+  postId: number
+  authorId: number
+  authorFirstName: string
+  commentText: string
+  createdAt: string
+}
