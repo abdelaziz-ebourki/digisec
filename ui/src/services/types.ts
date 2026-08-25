@@ -36,3 +36,11 @@ export interface CommentResponse {
   commentText: string
   createdAt: string
 }
+
+export interface ActivityResponse {
+  id: number
+  title: string
+  activityDate: string
+  message: string
+  imageUrl: string | null
+}
