@@ -39,7 +39,7 @@ describe('Login page', () => {
 
   it('submits credentials and navigates home on success', async () => {
     mockLogin.mockResolvedValue(undefined)
-    const user = userEvent.setup()
+    const user = userEvent.setup({ delay: null })
     renderLogin()
 
     await user.type(screen.getByLabelText('Adresse e-mail'), 'test@digisec.local')
@@ -55,7 +55,7 @@ describe('Login page', () => {
       isAxiosError: true,
       response: { status: 401, data: { detail: 'Invalid email or password' } },
     })
-    const user = userEvent.setup()
+    const user = userEvent.setup({ delay: null })
     renderLogin()
 
     await user.type(screen.getByLabelText('Adresse e-mail'), 'test@digisec.local')

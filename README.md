@@ -49,6 +49,14 @@ npm run dev
 
 Runs on `http://localhost:5173`; `/api/*` requests are proxied to the backend.
 
+Run both stacks in parallel for full functionality (auth, forum, activities).
+
+```bash
+npm run lint   # oxlint
+npm run build  # tsc + vite production build
+npm test       # vitest
+```
+
 ## Branching
 
 Work happens on the long-lived `rewrite/main` branch via feature branches (`rewrite/api-auth`, `rewrite/ui-layout`, ...). `main` holds the legacy PHP application until the rewrite reaches parity.

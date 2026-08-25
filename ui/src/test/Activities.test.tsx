@@ -104,7 +104,7 @@ describe('Activities page', () => {
   it('creates an activity with multipart form data', async () => {
     mockUser = { id: 1, firstName: 'A', lastName: 'D', email: 'a@d.local', role: 'ADMIN' }
     mockCreateActivity.mockResolvedValue(makeActivity())
-    const user = userEvent.setup()
+    const user = userEvent.setup({ delay: null })
     renderPage()
 
     await user.click(await screen.findByRole('button', { name: /nouvelle activité/i }))
@@ -131,7 +131,7 @@ describe('Activities page', () => {
   it('deletes an activity after confirmation', async () => {
     mockUser = { id: 1, firstName: 'A', lastName: 'D', email: 'a@d.local', role: 'ADMIN' }
     mockDeleteActivity.mockResolvedValue(undefined)
-    const user = userEvent.setup()
+    const user = userEvent.setup({ delay: null })
     renderPage()
 
     await user.click(
@@ -147,7 +147,7 @@ describe('Activities page', () => {
       isAxiosError: true,
       response: { status: 500, data: { detail: 'Database down' } },
     })
-    const user = userEvent.setup()
+    const user = userEvent.setup({ delay: null })
     renderPage()
 
     expect(await screen.findByText(/impossible de charger les activités/i)).toBeInTheDocument()

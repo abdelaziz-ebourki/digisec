@@ -89,7 +89,7 @@ describe('Forum page', () => {
       .mockResolvedValueOnce(pagedResponse([makePost({ title: 'Page un' })], 2))
       .mockResolvedValueOnce(pagedResponse([makePost({ id: 9, title: 'Page deux' })], 2))
 
-    const user = userEvent.setup()
+    const user = userEvent.setup({ delay: null })
     renderForum()
 
     await user.click(await screen.findByRole('button', { name: /suivant/i }))
@@ -110,7 +110,7 @@ describe('Forum page', () => {
       isAxiosError: true,
       response: { status: 500, data: { detail: 'Database down' } },
     })
-    const user = userEvent.setup()
+    const user = userEvent.setup({ delay: null })
     renderForum()
 
     expect(await screen.findByText(/impossible de charger le forum/i)).toBeInTheDocument()
@@ -124,7 +124,7 @@ describe('Forum page', () => {
   it('creates a post through the dialog', async () => {
     mockUser = { id: 2, firstName: 'Test', lastName: 'User', email: 't@d.local', role: 'USER' }
     mockCreatePost.mockResolvedValue(makePost())
-    const user = userEvent.setup()
+    const user = userEvent.setup({ delay: null })
     renderForum()
 
     await user.click(await screen.findByRole('button', { name: /nouveau sujet/i }))
@@ -167,7 +167,7 @@ describe('Forum page', () => {
   it('deletes a post after confirmation', async () => {
     mockUser = { id: 2, firstName: 'Test', lastName: 'User', email: 't@d.local', role: 'USER' }
     mockDeletePost.mockResolvedValue(undefined)
-    const user = userEvent.setup()
+    const user = userEvent.setup({ delay: null })
     renderForum()
 
     await user.click(await screen.findByRole('button', { name: /supprimer le sujet/i }))
@@ -186,7 +186,7 @@ describe('Forum page', () => {
       commentText: 'Super !',
       createdAt: '2026-08-24T22:30:00',
     })
-    const user = userEvent.setup()
+    const user = userEvent.setup({ delay: null })
     renderForum()
 
     await user.click(await screen.findByRole('button', { name: /commentaires/i }))
