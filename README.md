@@ -5,27 +5,50 @@ Club web application — monorepo containing the React frontend (`ui/`) and the 
 ## Layout
 
 ```
-├── ui/    React 19 + TypeScript + Vite + Tailwind CSS
-└── api/   Spring Boot (Java 21, Maven) + MySQL
+├── ui/    React 19 + TypeScript + Vite + Tailwind CSS (shadcn/ui)
+└── api/   Spring Boot 4.1 (Java 25, Maven) + MariaDB
 ```
 
 ## Prerequisites
 
 - Node.js 22+
 - JDK 25+ (Maven Wrapper included, no global Maven needed)
-- MySQL 8+
+- MariaDB 11+ (or MySQL 8+)
+- Docker + Docker Compose (for production-like stack)
 
 ## Development
 
-### API
+### Option A — Docker (recommended, no 502)
 
 ```bash
-cd api
-export DB_USERNAME=... DB_PASSWORD=... JWT_SECRET=... SMTP_HOST=... SMTP_USERNAME=... SMTP_PASSWORD=...
-./mvnw spring-boot:run
+cp .env.example .env   # set JWT_SECRET (32+ chars), DB_ROOT_PASSWORD, DB_PASSWORD
+sg docker -c "docker compose up --build -d"
+# Frontend: http://localhost          (nginx serves ui/dist, proxies /api → api:8080)
+# API health: curl http://localhost/api/v1/activities
 ```
 
-Runs on `http://localhost:8080`; Swagger UI at `/swagger-ui.html`.
+### Option B — Local (Vite dev + Spring Boot)
+
+Requires a running MariaDB (`systemctl start mariadb`).
+
+```bash
+# Terminal 1 — API
+cd api
+export DB_USERNAME=digisec DB_PASSWORD=digisec
+export JWT_SECRET=local-test-secret-0123456789abcdef
+./mvnw spring-boot:run   # http://localhost:8080
+```
+
+```bash
+# Terminal 2 — UI
+cd ui
+npm install
+npm run dev              # http://localhost:5173, proxies /api → localhost:8080
+```
+
+> **502 on Activities/Forum?** You mixed the two workflows: `npm run dev` (:5173) needs `api` at `:8080` on the host (Option B). With `docker compose up`, use `http://localhost` (:80 nginx, not :5173). `api` is now exposed at `8080:8080` for either workflow, but don't run both APIs at once.
+
+Runs on `http://localhost:8080` (`/actuator/health` is public); Swagger UI at `/swagger-ui.html` (proxied as `/api/v3/api-docs` in Docker).
 
 | Env var | Default | Purpose |
 | --- | --- | --- |
