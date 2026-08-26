@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 
-const CAROUSEL_IMAGES = [1, 2, 3, 4, 5, 6, 7]
+const CAROUSEL_IMAGES = [1, 2, 4, 5, 6, 7]
 
 export function HomeContent() {
   return (
@@ -102,7 +102,7 @@ export function HomeContent() {
         </div>
         <div className="relative order-1 md:order-2">
           <img
-            src="/images/home/21.jpg"
+            src="/images/home/opportunites.jpg"
             alt="Atelier DIGISEC"
             className="aspect-[4/3] w-full rounded-2xl object-cover"
             loading="lazy"
