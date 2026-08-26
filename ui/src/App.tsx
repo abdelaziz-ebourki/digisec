@@ -2,6 +2,8 @@ import { Route, Routes } from 'react-router-dom'
 import { Layout } from '@/components/layout/Layout'
 import { AdminRoute, ProtectedRoute } from '@/components/layout/RouteGuards'
 import Home from '@/pages/Home'
+import Accueil1 from '@/pages/Accueil1'
+import Accueil2 from '@/pages/Accueil2'
 import About from '@/pages/About'
 import Activities from '@/pages/Activities'
 import Forum from '@/pages/Forum'
@@ -15,6 +17,10 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<Home />} />
+        <Route path="accueil1" element={<Accueil1 />} />
+        <Route path="acceuil1" element={<Accueil1 />} />
+        <Route path="accueil2" element={<Accueil2 />} />
+        <Route path="acceuil2" element={<Accueil2 />} />
         <Route path="digisec" element={<About />} />
         <Route path="activities" element={<Activities />} />
         <Route path="forum" element={<Forum />} />
