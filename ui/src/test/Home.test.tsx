@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
-const mockTyped = vi.hoisted(() => ({ text: 'Rejoignez DIGISEC' }))
+const mockTyped = vi.hoisted(() => ({ text: 'Join US' }))
 
 vi.mock('@/hooks/useTypewriter', () => ({
   useTypewriter: () => mockTyped.text,
@@ -14,7 +14,8 @@ describe('Home page', () => {
   it('renders the typewriter headline and main sections', async () => {
     renderWithProviders(<Home />)
 
-    expect(await screen.findByText('Rejoignez DIGISEC')).toBeInTheDocument()
+    expect(await screen.findByText('Join US')).toBeInTheDocument()
+    expect(screen.getByText(/Digi.*tal/i)).toBeInTheDocument()
     expect(screen.getByText(/cœur/i, { selector: 'span' })).toBeInTheDocument()
     expect(screen.getByText('IMPACT')).toBeInTheDocument()
     expect(screen.getByText(/opportunités/i)).toBeInTheDocument()

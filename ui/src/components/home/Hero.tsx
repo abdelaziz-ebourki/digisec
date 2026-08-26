@@ -9,7 +9,7 @@ const TYPED_PHRASES = [
   'Learn - Network - ...',
 ]
 
-export function HeroLegacy() {
+export function Hero() {
   const typed = useTypewriter(TYPED_PHRASES, {
     typeSpeed: 80,
     deleteSpeed: 50,
@@ -18,6 +18,16 @@ export function HeroLegacy() {
 
   return (
     <section className="relative overflow-hidden bg-neutral-950 text-white">
+      <img
+        src="/images/home/hero-shield.png"
+        alt=""
+        aria-hidden
+        className="absolute inset-0 size-full object-cover opacity-40"
+      />
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-gradient-to-b from-neutral-950/30 via-neutral-950/60 to-neutral-950"
+      />
       <div
         aria-hidden
         className="bg-primary/20 absolute -top-32 left-1/2 size-[36rem] -translate-x-1/2 rounded-full blur-3xl"

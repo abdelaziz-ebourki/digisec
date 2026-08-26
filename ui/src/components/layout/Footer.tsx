@@ -6,10 +6,19 @@ export function Footer() {
     <footer className="border-t bg-background">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-3">
         <div>
-          <p className="text-lg font-bold">
-            Digi<span className="text-primary">sec</span>
-          </p>
-          <p className="mt-2 max-w-xs text-sm text-muted-foreground">
+          <div className="flex items-center gap-3">
+            <img
+              src="/images/logos/digisec.png"
+              alt="DIGISEC"
+              className="size-10 rounded-full border object-cover"
+            />
+            <img
+              src="/images/logos/fsbm.png"
+              alt="FSBM"
+              className="h-10 w-auto object-contain"
+            />
+          </div>
+          <p className="mt-3 max-w-xs text-sm text-muted-foreground">
             Digitalisation et cybersécurité — club étudiant de la FSBM.
           </p>
         </div>

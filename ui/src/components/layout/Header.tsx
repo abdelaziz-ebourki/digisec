@@ -42,8 +42,15 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-        <Link to="/" className="text-lg font-bold tracking-tight">
-          Digi<span className="text-primary">sec</span>
+        <Link to="/" className="flex items-center gap-2 text-lg font-bold tracking-tight">
+          <img
+            src="/images/logos/digisec.png"
+            alt="DIGISEC"
+            className="size-8 rounded-full object-cover"
+          />
+          <span>
+            Digi<span className="text-primary">sec</span>
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex" aria-label="Navigation principale">
@@ -91,8 +98,15 @@ export function Header() {
           </SheetTrigger>
           <SheetContent side="right" className="w-64">
             <SheetHeader>
-              <SheetTitle>
-                Digi<span className="text-primary">sec</span>
+              <SheetTitle className="flex items-center gap-2">
+                <img
+                  src="/images/logos/digisec.png"
+                  alt="DIGISEC"
+                  className="size-7 rounded-full object-cover"
+                />
+                <span>
+                  Digi<span className="text-primary">sec</span>
+                </span>
               </SheetTitle>
             </SheetHeader>
             <nav className="flex flex-col gap-1 px-4" aria-label="Navigation mobile">
