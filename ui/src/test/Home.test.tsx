@@ -21,15 +21,20 @@ describe('Home page', () => {
     expect(screen.getByText(/opportunités/i)).toBeInTheDocument()
   })
 
-  it('renders the seven carousel slides', () => {
+  it('renders the carousel slides without the opportunites image', () => {
     renderWithProviders(<Home />)
 
-    for (let image = 1; image <= 7; image += 1) {
+    for (const image of [1, 2, 4, 5, 6, 7]) {
       expect(screen.getByAltText(`Moment fort DIGISEC ${image}`)).toHaveAttribute(
         'src',
         `/images/carousel/${image}.jpg`,
       )
     }
+    expect(screen.queryByAltText('Moment fort DIGISEC 3')).not.toBeInTheDocument()
+    expect(screen.getByAltText('Atelier DIGISEC')).toHaveAttribute(
+      'src',
+      '/images/home/opportunites.jpg',
+    )
   })
 
   it('links the membership duo to the right routes', () => {
