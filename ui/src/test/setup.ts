@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom/vitest'
+import 'jest-axe/extend-expect'
 
 if (typeof window !== 'undefined' && typeof window.matchMedia !== 'function') {
   Object.defineProperty(window, 'matchMedia', {
