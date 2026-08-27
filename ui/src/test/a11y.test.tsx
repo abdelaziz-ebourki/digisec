@@ -23,7 +23,7 @@ function wrap(ui: React.ReactElement) {
   )
 }
 
-describe('a11y (jest-axe) — allowlisted known violations', () => {
+describe('a11y (jest-axe) — strict AA', () => {
   it('Button variants have no axe violations', async () => {
     const { container } = render(
       <div>
@@ -34,13 +34,11 @@ describe('a11y (jest-axe) — allowlisted known violations', () => {
         <Button variant="destructive">Destructive</Button>
       </div>,
     )
-    const results = await axe(container, {
-      rules: { 'color-contrast': { enabled: false } },
-    })
+    const results = await axe(container)
     ;(expect(results) as any).toHaveNoViolations()
   })
 
-  it('Badge variants have no axe violations (contrast allowlisted)', async () => {
+  it('Badge variants have no axe violations', async () => {
     const { container } = render(
       <div>
         <Badge>Default</Badge>
@@ -49,13 +47,11 @@ describe('a11y (jest-axe) — allowlisted known violations', () => {
         <Badge variant="destructive">Destructive</Badge>
       </div>,
     )
-    const results = await axe(container, {
-      rules: { 'color-contrast': { enabled: false } },
-    })
+    const results = await axe(container)
     ;(expect(results) as any).toHaveNoViolations()
   })
 
-  it('Card has no axe violations (color-contrast allowlisted for muted)', async () => {
+  it('Card has no axe violations', async () => {
     const { container } = render(
       <Card>
         <CardHeader>
@@ -64,19 +60,13 @@ describe('a11y (jest-axe) — allowlisted known violations', () => {
         </CardHeader>
       </Card>,
     )
-    const results = await axe(container, {
-      rules: { 'color-contrast': { enabled: false } },
-    })
+    const results = await axe(container)
     ;(expect(results) as any).toHaveNoViolations()
   })
 
-  it('Home hero has no critical axe violations (color-contrast allowlisted for decorative hero)', async () => {
+  it('Home hero has no axe violations', async () => {
     const { container } = render(wrap(<Home />))
-    const results = await axe(container, {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    })
+    const results = await axe(container)
     ;(expect(results) as any).toHaveNoViolations()
   })
 
@@ -87,9 +77,7 @@ describe('a11y (jest-axe) — allowlisted known violations', () => {
         <AlertDescription>Something happened.</AlertDescription>
       </Alert>,
     )
-    const results = await axe(container, {
-      rules: { 'color-contrast': { enabled: false } },
-    })
+    const results = await axe(container)
     ;(expect(results) as any).toHaveNoViolations()
   })
 })

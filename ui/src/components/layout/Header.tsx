@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { LogOut, Menu } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import {
@@ -27,6 +27,7 @@ const NAV_ITEMS = [
 export function Header() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
 
@@ -37,6 +38,9 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  const isHome = location.pathname === '/'
+  const isTransparent = isHome && !isScrolled
+
   const handleLogout = () => {
     logout()
     navigate('/')
@@ -46,24 +50,24 @@ export function Header() {
     `text-sm font-medium tracking-wide transition-colors ${
       isActive
         ? 'text-primary'
-        : isScrolled
-          ? 'text-foreground/80 hover:text-foreground'
-          : 'text-white/80 hover:text-white'
+        : isTransparent
+          ? 'text-white/80 hover:text-white'
+          : 'text-foreground/80 hover:text-foreground'
     }`
 
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 border-b transition-colors ${
-        isScrolled
-          ? 'border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'
-          : 'border-transparent bg-transparent'
+        isTransparent
+          ? 'border-transparent bg-transparent'
+          : 'border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'
       }`}
     >
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <Link
           to="/"
           className={`flex items-center gap-2 text-lg font-bold tracking-tight transition-colors ${
-            isScrolled ? 'text-foreground' : 'text-white'
+            isTransparent ? 'text-white' : 'text-foreground'
           }`}
         >
           <img
@@ -91,7 +95,7 @@ export function Header() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className={isScrolled ? '' : 'text-white hover:bg-white/10 hover:text-white'}
+                  className={isTransparent ? 'text-white hover:bg-white/10 hover:text-white' : ''}
                 >
                   {user.firstName}
                 </Button>
@@ -110,7 +114,7 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="sm"
-                className={isScrolled ? '' : 'text-white hover:bg-white/10 hover:text-white'}
+                className={isTransparent ? 'text-white hover:bg-white/10 hover:text-white' : ''}
                 asChild
               >
                 <Link to="/login">Connexion</Link>
@@ -128,7 +132,7 @@ export function Header() {
               variant="ghost"
               size="icon"
               aria-label="Ouvrir le menu"
-              className={isScrolled ? '' : 'text-white hover:bg-white/10 hover:text-white'}
+              className={isTransparent ? 'text-white hover:bg-white/10 hover:text-white' : ''}
             >
               <Menu />
             </Button>

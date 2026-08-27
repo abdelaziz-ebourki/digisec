@@ -39,7 +39,7 @@ export function Hero() {
         className="bg-primary/20 pointer-events-none absolute -top-32 left-1/2 size-[36rem] -translate-x-1/2 rounded-full blur-3xl"
       />
       <div className="relative mx-auto flex max-w-6xl flex-col items-center px-4 pb-20 pt-32 text-center md:pt-36">
-        <Badge variant="outline" className="border-white/20 bg-white/10 text-white backdrop-blur">
+        <Badge className="border-white bg-white text-neutral-900">
           FSBM · Université Hassan II
         </Badge>
         <h1
@@ -73,7 +73,7 @@ export function Hero() {
             <Link to="/activities">Voir les activités</Link>
           </Button>
         </div>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm text-white/70">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm text-white">
           <span>14 membres</span>
           <span aria-hidden>·</span>
           <span>7 événements</span>

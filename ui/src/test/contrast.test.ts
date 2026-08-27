@@ -7,6 +7,7 @@ function contrast(fg: string, bg: string): number {
 
 function hex(oklch: string): string {
   const map: Record<string, string> = {
+    'oklch(0.45 0 0)': '#767676',
     'oklch(0.556 0 0)': '#8a8a8a',
     'oklch(1 0 0)': '#ffffff',
     'oklch(0.795 0.163 70)': '#f59e0b',
@@ -19,13 +20,10 @@ function hex(oklch: string): string {
   return map[oklch] ?? oklch
 }
 
-describe('design token contrast (allowlisted known failures)', () => {
-  it('documents muted-foreground on white (known below AA)', () => {
-    const ratio = contrast(hex('oklch(0.556 0 0)'), hex('oklch(1 0 0)'))
-    expect(ratio).toBeGreaterThan(3)
-    if (ratio < 4.5) {
-      expect(ratio).toBeGreaterThan(0)
-    }
+describe('design token contrast (strict AA)', () => {
+  it('muted-foreground on white meets AA', () => {
+    const ratio = contrast(hex('oklch(0.45 0 0)'), hex('oklch(1 0 0)'))
+    expect(ratio).toBeGreaterThanOrEqual(4.5)
   })
 
   it('primary orange on dark passes for large text', () => {
