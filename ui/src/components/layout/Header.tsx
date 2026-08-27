@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { LogOut, Menu } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
@@ -28,6 +28,14 @@ export function Header() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 20)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const handleLogout = () => {
     logout()
@@ -36,13 +44,28 @@ export function Header() {
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `text-sm font-medium tracking-wide transition-colors ${
-      isActive ? 'text-primary' : 'text-foreground/80 hover:text-foreground'
+      isActive
+        ? 'text-primary'
+        : isScrolled
+          ? 'text-foreground/80 hover:text-foreground'
+          : 'text-white/80 hover:text-white'
     }`
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-colors ${
+        isScrolled
+          ? 'border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'
+          : 'border-transparent bg-transparent'
+      }`}
+    >
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2 text-lg font-bold tracking-tight">
+        <Link
+          to="/"
+          className={`flex items-center gap-2 text-lg font-bold tracking-tight transition-colors ${
+            isScrolled ? 'text-foreground' : 'text-white'
+          }`}
+        >
           <img
             src="/images/logos/digisec.png"
             alt="DIGISEC"
@@ -65,7 +88,11 @@ export function Header() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={isScrolled ? '' : 'text-white hover:bg-white/10 hover:text-white'}
+                >
                   {user.firstName}
                 </Button>
               </DropdownMenuTrigger>
@@ -80,7 +107,12 @@ export function Header() {
             </DropdownMenu>
           ) : (
             <>
-              <Button variant="ghost" size="sm" asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={isScrolled ? '' : 'text-white hover:bg-white/10 hover:text-white'}
+                asChild
+              >
                 <Link to="/login">Connexion</Link>
               </Button>
               <Button size="sm" asChild>
@@ -92,7 +124,12 @@ export function Header() {
 
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="icon" aria-label="Ouvrir le menu">
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Ouvrir le menu"
+              className={isScrolled ? '' : 'text-white hover:bg-white/10 hover:text-white'}
+            >
               <Menu />
             </Button>
           </SheetTrigger>
