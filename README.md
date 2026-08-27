@@ -80,6 +80,12 @@ npm run build  # tsc + vite production build
 npm test       # vitest
 ```
 
-## Branching
+## Quickstart
 
-Work happens on the long-lived `rewrite/main` branch via feature branches (`rewrite/api-auth`, `rewrite/ui-layout`, ...). `main` holds the legacy PHP application until the rewrite reaches parity.
+```bash
+cp .env.example .env   # fill JWT_SECRET (32+ chars) + DB passwords
+docker compose up --build -d   # http://localhost (prod-like)
+# or: cd api && ./mvnw spring-boot:run & cd ui && npm run dev   # http://localhost:5173
+```
+
+Legacy PHP (`public/`) was removed in `v1.0.0` — recoverable at tag `legacy` and in history (`main` pre-merge).
