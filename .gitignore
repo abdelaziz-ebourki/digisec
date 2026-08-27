@@ -1,2 +1,18 @@
+# Environment & secrets
 .env
+.env.*
+!.env.example
+
+# Node / UI
+node_modules/
+ui/dist/
+
+# Java / API
+api/target/
+*.class
+
+# Logs
 *.log
+.vscode/
+.idea/
+.env
