@@ -3,6 +3,7 @@ import path from 'node:path'
 
 const root = path.resolve(import.meta.dirname, '..')
 const apiLog = path.resolve(import.meta.dirname, '.artifacts/api.log')
+const apiLogDir = path.dirname(apiLog)
 
 export default defineConfig({
   testDir: '.',
@@ -19,7 +20,7 @@ export default defineConfig({
   outputDir: '.artifacts/test-results',
   webServer: [
     {
-      command: `java -jar ${root}/api/target/api-0.0.1-SNAPSHOT.jar --logging.level.com.digisec=DEBUG > ${apiLog} 2>&1`,
+      command: `mkdir -p ${apiLogDir} && java -jar ${root}/api/target/api-0.0.1-SNAPSHOT.jar --logging.level.com.digisec=DEBUG > ${apiLog} 2>&1`,
       url: 'http://localhost:8080/actuator/health',
       reuseExistingServer: false,
       timeout: 90_000,
