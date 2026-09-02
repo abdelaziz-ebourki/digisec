@@ -122,7 +122,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
         </form>
       ) : (
         <p className="text-sm text-muted-foreground">
-          <Link to="/login" className="font-medium text-primary underline">
+          <Link to="/login" className="font-medium text-amber-700 underline dark:text-amber-400">
             Connectez-vous
           </Link>{' '}
           pour commenter.

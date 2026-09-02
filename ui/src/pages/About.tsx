@@ -42,7 +42,7 @@ export default function About() {
     <>
       <section className="mx-auto max-w-6xl px-4 py-16">
         <h1 className="text-3xl font-bold">
-          Notre <span className="text-primary">mission</span>
+          Notre <span className="text-amber-700 dark:text-amber-400">mission</span>
         </h1>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {MISSIONS.map((mission) => (
@@ -100,7 +100,7 @@ export default function About() {
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-2">
         <div className="order-2 md:order-1">
           <h2 className="text-3xl font-bold">
-            Notre <span className="text-primary">vision</span>
+            Notre <span className="text-amber-700 dark:text-amber-400">vision</span>
           </h2>
           <p className="mt-4 leading-relaxed text-muted-foreground">
             Le club DIGISEC vise à devenir une plateforme incontournable pour les étudiants

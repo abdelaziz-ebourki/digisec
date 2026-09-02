@@ -132,7 +132,7 @@ export default function Register() {
           </form>
           <p className="mt-4 text-center text-sm text-muted-foreground">
             Déjà membre ?{' '}
-            <Link to="/login" className="font-medium text-primary underline">
+            <Link to="/login" className="font-medium text-amber-700 underline dark:text-amber-400">
               Connectez-vous
             </Link>
           </p>

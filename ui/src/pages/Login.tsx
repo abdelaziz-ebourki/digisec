@@ -95,7 +95,7 @@ export default function Login() {
           </form>
           <p className="mt-4 text-center text-sm text-muted-foreground">
             Pas encore de compte ?{' '}
-            <Link to="/register" className="font-medium text-primary underline">
+            <Link to="/register" className="font-medium text-amber-700 underline dark:text-amber-400">
               Inscrivez-vous
             </Link>
           </p>
