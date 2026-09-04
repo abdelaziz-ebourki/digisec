@@ -7,7 +7,10 @@ export interface ApiError {
 }
 
 const api = axios.create({
-  baseURL: '/api/v1',
+  // Same-origin nginx proxy (`/api`) by default (Docker Compose, Vite dev).
+  // Set VITE_API_URL (e.g. https://<render-backend>/api/v1) when the
+  // frontend is hosted separately, e.g. on Vercel.
+  baseURL: import.meta.env.VITE_API_URL ?? '/api/v1',
 })
 
 api.interceptors.request.use((config) => {
