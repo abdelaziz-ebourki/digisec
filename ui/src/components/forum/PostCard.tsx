@@ -42,12 +42,12 @@ export function PostCard({ post, onRequestDelete }: PostCardProps) {
             aria-label={`Supprimer le sujet ${post.title}`}
             onClick={() => onRequestDelete(post.id)}
           >
-            <Trash2 className="size-4" />
+            <Trash2 className="text-muted-foreground size-4" />
           </Button>
         )}
       </CardHeader>
       <CardContent className="space-y-2">
-        <p className="text-sm whitespace-pre-wrap text-foreground/90">{post.content}</p>
+        <p className="text-sm leading-relaxed whitespace-pre-wrap text-muted-foreground">{post.content}</p>
         <CommentsToggle expanded={expanded} onToggle={() => setExpanded(!expanded)} />
         {expanded && <CommentSection postId={post.id} />}
       </CardContent>

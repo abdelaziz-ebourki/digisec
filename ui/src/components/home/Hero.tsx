@@ -28,7 +28,7 @@ export function Hero() {
         width={1200}
         height={661}
         fetchPriority="high"
-        className="absolute inset-0 size-full object-cover opacity-40"
+        className="absolute inset-0 size-full object-cover "
       />
       <div
         aria-hidden
@@ -39,21 +39,21 @@ export function Hero() {
         className="bg-primary/20 pointer-events-none absolute -top-32 left-1/2 size-[36rem] -translate-x-1/2 rounded-full blur-3xl"
       />
       <div className="relative mx-auto flex max-w-6xl flex-col items-center px-4 pb-20 pt-32 text-center md:pt-36">
-        <Badge className="border-white bg-white text-neutral-900">
+        <Badge>
           FSBM · Université Hassan II
         </Badge>
         <h1
           aria-live="polite"
           className="mt-6 min-h-[4.5rem] text-4xl font-bold tracking-tight sm:min-h-[5.5rem] sm:text-5xl md:text-6xl"
         >
-          <span className="text-primary italic">{typed}</span>
-          <span aria-hidden className="text-primary motion-safe:animate-pulse">
+          <span className="text-amber-400 italic">{typed}</span>
+          <span aria-hidden className="text-amber-400 motion-safe:animate-pulse">
             |
           </span>
         </h1>
         <p className="mt-2 text-xl font-semibold tracking-wide text-white sm:text-2xl">
-          <span className="text-primary italic">Digi</span>tal -{' '}
-          <span className="text-primary italic">cyber</span>security
+          <span className="text-amber-400 italic">Digi</span>tal -{' '}
+          <span className="text-amber-400 italic">cyber</span>security
         </p>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-neutral-200 sm:text-lg">
           Une communauté d'étudiants qui apprend, partage et protège le monde numérique de demain.
@@ -80,20 +80,6 @@ export function Hero() {
           <span aria-hidden>·</span>
           <span>FSBM Casablanca</span>
         </div>
-      </div>
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 leading-none"
-      >
-        <svg
-          data-name="Layer 1"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1200 120"
-          preserveAspectRatio="none"
-          className="block h-12 w-full fill-white md:h-16"
-        >
-          <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" />
-        </svg>
       </div>
     </section>
   )

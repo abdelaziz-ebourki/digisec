@@ -10,6 +10,7 @@ import type { CommentResponse } from '@/services/types'
 import { formatDateTime } from '@/lib/date'
 import { useAuth } from '@/context/AuthContext'
 import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Textarea } from '@/components/ui/textarea'
 
 interface CommentSectionProps {
@@ -40,7 +41,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
   const deleteMutation = useMutation({
     mutationFn: (commentId: number) => deleteComment(commentId),
     onSuccess: () => {
-      toast.success('Commentaire supprimé')
+      toast.success('Commentaire supprimé !')
       invalidate()
     },
     onError: (error) => toast.error(parseApiError(error).message),
@@ -60,9 +61,10 @@ export function CommentSection({ postId }: CommentSectionProps) {
 
   if (commentsQuery.isError) {
     return (
-      <p role="alert" className="text-destructive px-4 py-2 text-sm">
-        {parseApiError(commentsQuery.error).message}
-      </p>
+      <Alert variant="destructive">
+        <AlertTitle>Impossible de charger les commentaires</AlertTitle>
+        <AlertDescription>{parseApiError(commentsQuery.error).message}</AlertDescription>
+      </Alert>
     )
   }
 
@@ -82,7 +84,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
                 · {formatDateTime(comment.createdAt)}
               </span>
             </p>
-            <p className="text-sm break-words text-foreground/90">{comment.commentText}</p>
+            <p className="text-sm leading-relaxed break-words text-muted-foreground">{comment.commentText}</p>
           </div>
           {canDelete(comment) && (
             <Button
@@ -92,7 +94,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
               onClick={() => deleteMutation.mutate(comment.id)}
               disabled={deleteMutation.isPending}
             >
-              <Trash2 className="size-4" />
+              <Trash2 className="text-muted-foreground size-4" />
             </Button>
           )}
         </div>
@@ -122,7 +124,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
         </form>
       ) : (
         <p className="text-sm text-muted-foreground">
-          <Link to="/login" className="font-medium text-amber-700 underline dark:text-amber-400">
+          <Link to="/login" className="font-medium text-amber-400 underline">
             Connectez-vous
           </Link>{' '}
           pour commenter.

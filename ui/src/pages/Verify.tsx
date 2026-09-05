@@ -46,7 +46,7 @@ export default function Verify() {
       {token && verification.isPending && (
         <Card className="text-center">
           <CardContent className="flex flex-col items-center gap-4 py-12">
-            <LoaderCircle className="text-primary size-10 animate-spin" />
+            <LoaderCircle className="text-amber-400 size-10 animate-spin" />
             <p className="text-sm text-muted-foreground">Vérification de votre compte en cours…</p>
           </CardContent>
         </Card>
@@ -55,7 +55,7 @@ export default function Verify() {
       {token && verification.isSuccess && (
         <Card className="text-center">
           <CardHeader>
-            <CheckCircle2 className="text-primary mx-auto size-12" />
+            <CheckCircle2 className="text-amber-400 mx-auto size-12" />
             <CardTitle className="mt-2 text-2xl">Compte vérifié !</CardTitle>
             <CardDescription>{verification.data.message}</CardDescription>
           </CardHeader>

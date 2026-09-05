@@ -2,6 +2,7 @@ import { CalendarDays, Megaphone, ShieldCheck, Smartphone, Target } from 'lucide
 import type { LucideIcon } from 'lucide-react'
 import { MEMBERS } from '@/data/members'
 import { Badge } from '@/components/ui/badge'
+import { SectionDivider } from '@/components/layout/SectionDivider'
 import {
   Card,
   CardContent,
@@ -42,7 +43,7 @@ export default function About() {
     <>
       <section className="mx-auto max-w-6xl px-4 py-16">
         <h1 className="text-3xl font-bold">
-          Notre <span className="text-amber-700 dark:text-amber-400">mission</span>
+          Notre <span className="text-amber-400">mission</span>
         </h1>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {MISSIONS.map((mission) => (
@@ -54,7 +55,7 @@ export default function About() {
                 className="aspect-[4/3] w-full object-cover"
               />
               <CardHeader>
-                <mission.icon className="text-primary size-7" />
+                <mission.icon className="text-amber-400 size-7" />
                 <CardTitle className="mt-2">{mission.title}</CardTitle>
               </CardHeader>
               <CardContent>
@@ -65,7 +66,8 @@ export default function About() {
         </div>
       </section>
 
-      <section className="bg-muted/50 py-16">
+      <SectionDivider fill="fill-muted" />
+      <section className="bg-muted py-16">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 md:grid-cols-2">
           <img
             src="/images/about/degi.jpg"
@@ -75,7 +77,7 @@ export default function About() {
           />
           <div>
             <h2 className="flex items-center gap-3 text-3xl font-bold">
-              <Target className="text-primary size-8" /> Objectifs
+              <Target className="text-amber-400 size-8" /> Objectifs
             </h2>
             <div className="mt-6 space-y-6">
               <div>
@@ -96,11 +98,12 @@ export default function About() {
           </div>
         </div>
       </section>
+      <SectionDivider fill="fill-background" wrapperClassName="bg-muted" />
 
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-2">
         <div className="order-2 md:order-1">
           <h2 className="text-3xl font-bold">
-            Notre <span className="text-amber-700 dark:text-amber-400">vision</span>
+            Notre <span className="text-amber-400">vision</span>
           </h2>
           <p className="mt-4 leading-relaxed text-muted-foreground">
             Le club DIGISEC vise à devenir une plateforme incontournable pour les étudiants
@@ -117,10 +120,11 @@ export default function About() {
         />
       </section>
 
-      <section className="bg-muted/50 py-16">
+      <SectionDivider fill="fill-muted" />
+      <section className="bg-muted py-16">
         <div className="mx-auto max-w-6xl px-4">
           <div className="mb-8">
-            <Megaphone className="text-primary size-8" />
+            <Megaphone className="text-amber-400 size-8" />
             <h2 className="mt-2 text-3xl font-bold">Notre bureau</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               L'équipe qui fait vivre le club au quotidien.

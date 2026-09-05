@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
+import { SectionDivider } from '@/components/layout/SectionDivider'
 
 const CAROUSEL_IMAGES = [1, 2, 4, 5, 6, 7]
 
@@ -31,7 +32,7 @@ export function HomeContent() {
         </div>
         <div>
           <h2 className="text-3xl font-bold">
-            Au <span className="text-primary">cœur</span> de Digisec
+            Au <span className="text-amber-400">cœur</span> de Digisec
           </h2>
           <p className="mt-4 leading-relaxed text-muted-foreground">
             DIGISEC, une fusion entre la digitalisation et la sécurité, symbolise notre engagement
@@ -43,10 +44,11 @@ export function HomeContent() {
         </div>
       </section>
 
+      <SectionDivider fill="fill-neutral-950" />
       <section className="bg-neutral-950 py-20 text-white">
         <div className="mx-auto max-w-6xl px-4">
           <h2 className="text-3xl font-bold">
-            NOTRE <span className="text-primary">IMPACT</span>
+            NOTRE <span className="text-amber-400">IMPACT</span>
           </h2>
           <p className="mt-4 max-w-3xl leading-relaxed text-neutral-300">
             Nous offrons des expériences uniques qui permettent à chacun de découvrir sa passion
@@ -60,6 +62,7 @@ export function HomeContent() {
           </Button>
         </div>
       </section>
+      <SectionDivider fill="fill-background" wrapperClassName="bg-neutral-950" />
 
       <section className="mx-auto max-w-6xl px-4 py-16">
         <Carousel
@@ -86,7 +89,7 @@ export function HomeContent() {
         <div className="order-2 md:order-1">
           <h2 className="text-3xl font-bold">
             Plongés dans l'univers des{' '}
-            <span className="text-primary">opportunités</span> !
+            <span className="text-amber-400">opportunités</span> !
           </h2>
           <p className="mt-4 leading-relaxed text-muted-foreground">
             Chez DIGISEC, nous mettons à votre disposition une variété de ressources et d'activités
@@ -114,11 +117,11 @@ export function HomeContent() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-4 pb-20">
+      <section className="mx-auto max-w-6xl px-4 pb-20">
         <div className="grid gap-6 sm:grid-cols-2">
           <Card className="text-center transition-shadow hover:shadow-lg">
             <CardHeader>
-              <Users className="text-primary mx-auto size-10" />
+              <Users className="text-amber-400 mx-auto size-10" />
               <CardTitle>Devenir membre</CardTitle>
               <CardDescription>
                 Bénéficiez d'un réseau de professionnels et de passionnés pour booster votre
@@ -133,7 +136,7 @@ export function HomeContent() {
           </Card>
           <Card className="text-center transition-shadow hover:shadow-lg">
             <CardHeader>
-              <ShieldCheck className="text-primary mx-auto size-10" />
+              <ShieldCheck className="text-amber-400 mx-auto size-10" />
               <CardTitle>Nos Ateliers</CardTitle>
               <CardDescription>
                 Développez vos compétences avec nos formations pratiques sur des sujets clés de la

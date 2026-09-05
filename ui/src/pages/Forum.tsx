@@ -32,7 +32,7 @@ export default function Forum() {
   const deleteMutation = useMutation({
     mutationFn: (postId: number) => deletePost(postId),
     onSuccess: () => {
-      toast.success('Sujet supprimé')
+      toast.success('Sujet supprimé !')
       setDeleteTarget(null)
       void queryClient.invalidateQueries({ queryKey: ['posts'] })
     },
@@ -40,9 +40,14 @@ export default function Forum() {
   })
 
   return (
-    <section className="mx-auto max-w-3xl space-y-6 px-4 py-10">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Forum de discussion</h1>
+    <section className="mx-auto max-w-3xl px-4 py-16">
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold">Forum de discussion</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Questions, idées et discussions de la communauté.
+          </p>
+        </div>
         {user ? (
           <Button onClick={() => setCreateOpen(true)}>
             <PlusCircle /> Nouveau sujet
@@ -55,7 +60,7 @@ export default function Forum() {
       </div>
 
       {postsQuery.isPending && (
-        <div className="space-y-4">
+        <div className="space-y-6">
           {[0, 1, 2].map((index) => (
             <Card key={index}>
               <CardContent className="space-y-3 py-6">
@@ -94,7 +99,7 @@ export default function Forum() {
           </Card>
         ) : (
           <>
-            <div className="space-y-4">
+            <div className="space-y-6">
               {postsQuery.data.content.map((post) => (
                 <PostCard key={post.id} post={post} onRequestDelete={setDeleteTarget} />
               ))}

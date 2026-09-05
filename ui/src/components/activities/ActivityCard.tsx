@@ -22,7 +22,7 @@ export function ActivityCard({ activity, onRequestDelete }: ActivityCardProps) {
 
   return (
     <Card className="group flex flex-col overflow-hidden pt-0 transition-shadow hover:shadow-lg">
-      <div className="bg-primary/10 text-primary relative aspect-[4/3] w-full">
+      <div className="bg-primary/10 text-amber-400 relative aspect-[4/3] w-full">
         {activity.imageUrl ? (
           <img
             src={activity.imageUrl}

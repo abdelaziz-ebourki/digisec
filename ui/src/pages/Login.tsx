@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import { useAuth } from '@/context/AuthContext'
 import { parseApiError } from '@/services/api'
 import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
   Card,
   CardContent,
@@ -60,9 +61,10 @@ export default function Login() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             {globalError && (
-              <p role="alert" className="text-destructive rounded-md bg-destructive/10 px-3 py-2 text-sm">
-                {globalError}
-              </p>
+              <Alert variant="destructive">
+                <AlertTitle>Connexion impossible</AlertTitle>
+                <AlertDescription>{globalError}</AlertDescription>
+              </Alert>
             )}
             <div className="space-y-2">
               <Label htmlFor="email">Adresse e-mail</Label>
@@ -95,7 +97,7 @@ export default function Login() {
           </form>
           <p className="mt-4 text-center text-sm text-muted-foreground">
             Pas encore de compte ?{' '}
-            <Link to="/register" className="font-medium text-amber-700 underline dark:text-amber-400">
+            <Link to="/register" className="font-medium text-amber-400 underline">
               Inscrivez-vous
             </Link>
           </p>

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarPlus, RefreshCw } from 'lucide-react'
+import { PlusCircle, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteActivity, listActivities } from '@/services/activities'
 import { parseApiError } from '@/services/api'
@@ -27,7 +27,7 @@ export default function Activities() {
   const deleteMutation = useMutation({
     mutationFn: (id: number) => deleteActivity(id),
     onSuccess: () => {
-      toast.success('Activité supprimée')
+      toast.success('Activité supprimée !')
       setDeleteTarget(null)
       void queryClient.invalidateQueries({ queryKey: ['activities'] })
     },
@@ -37,17 +37,17 @@ export default function Activities() {
   const isAdmin = user?.role === 'ADMIN'
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-10">
+    <section className="mx-auto max-w-6xl px-4 py-16">
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Nos activités</h1>
+          <h1 className="text-3xl font-bold">Nos activités</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Ateliers, conférences et événements du club.
           </p>
         </div>
         {isAdmin && (
           <Button onClick={() => setCreateOpen(true)}>
-            <CalendarPlus /> Nouvelle activité
+            <PlusCircle /> Nouvelle activité
           </Button>
         )}
       </div>

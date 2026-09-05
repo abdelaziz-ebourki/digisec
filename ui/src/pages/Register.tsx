@@ -6,6 +6,7 @@ import { MailCheck } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { parseApiError } from '@/services/api'
 import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
   Card,
   CardContent,
@@ -63,7 +64,7 @@ export default function Register() {
       <section className="mx-auto max-w-md px-4 py-16">
         <Card className="text-center">
           <CardHeader>
-            <MailCheck className="text-primary mx-auto size-12" />
+            <MailCheck className="text-amber-400 mx-auto size-12" />
             <CardTitle className="mt-2 text-2xl">Vérifiez votre boîte mail</CardTitle>
             <CardDescription>
               Un lien de vérification vous a été envoyé. Il expire dans 24 heures.
@@ -107,9 +108,10 @@ export default function Register() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             {globalError && (
-              <p role="alert" className="text-destructive rounded-md bg-destructive/10 px-3 py-2 text-sm">
-                {globalError}
-              </p>
+              <Alert variant="destructive">
+                <AlertTitle>Inscription impossible</AlertTitle>
+                <AlertDescription>{globalError}</AlertDescription>
+              </Alert>
             )}
             {FIELDS.map((field) => (
               <div key={field.name} className="space-y-2">
@@ -132,7 +134,7 @@ export default function Register() {
           </form>
           <p className="mt-4 text-center text-sm text-muted-foreground">
             Déjà membre ?{' '}
-            <Link to="/login" className="font-medium text-amber-700 underline dark:text-amber-400">
+            <Link to="/login" className="font-medium text-amber-400 underline">
               Connectez-vous
             </Link>
           </p>

@@ -49,7 +49,7 @@ export function Header() {
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `text-sm font-medium tracking-wide transition-colors ${
       isActive
-        ? 'text-primary'
+        ? 'text-amber-400'
         : isTransparent
           ? 'text-white/80 hover:text-white'
           : 'text-foreground/80 hover:text-foreground'
@@ -76,7 +76,7 @@ export function Header() {
             className="size-8 rounded-full object-cover"
           />
           <span>
-            Digi<span className="text-primary">sec</span>
+            Digi<span className="text-amber-400">sec</span>
           </span>
         </Link>
 
@@ -146,7 +146,7 @@ export function Header() {
                   className="size-7 rounded-full object-cover"
                 />
                 <span>
-                  Digi<span className="text-primary">sec</span>
+                  Digi<span className="text-amber-400">sec</span>
                 </span>
               </SheetTitle>
             </SheetHeader>
@@ -158,7 +158,7 @@ export function Header() {
                   onClick={() => setMobileOpen(false)}
                   className={({ isActive }) =>
                     `rounded-md px-3 py-2 text-sm font-medium ${
-                      isActive ? 'bg-accent text-primary' : 'hover:bg-accent'
+                      isActive ? 'bg-accent text-amber-400' : 'hover:bg-accent'
                     }`
                   }
                 >
