@@ -40,10 +40,10 @@ export default function Forum() {
   })
 
   return (
-    <section className="mx-auto max-w-3xl px-4 py-16">
+    <section className="mx-auto max-w-6xl px-4 py-16">
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Forum de discussion</h1>
+          <h1 className="text-3xl font-bold">Forum de <span className="text-amber-400">discussion</span></h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Questions, idées et discussions de la communauté.
           </p>

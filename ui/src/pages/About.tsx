@@ -125,7 +125,7 @@ export default function About() {
         <div className="mx-auto max-w-6xl px-4">
           <div className="mb-8">
             <Megaphone className="text-amber-400 size-8" />
-            <h2 className="mt-2 text-3xl font-bold">Notre bureau</h2>
+            <h2 className="mt-2 text-3xl font-bold">Notre <span className="text-amber-400">bureau</span></h2>
             <p className="mt-1 text-sm text-muted-foreground">
               L'équipe qui fait vivre le club au quotidien.
             </p>
