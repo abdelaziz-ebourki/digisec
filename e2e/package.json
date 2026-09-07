@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "playwright test"
+    "test": "bash run-docker.sh",
+    "test:local": "playwright test"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
