@@ -44,3 +44,15 @@ export interface ActivityResponse {
   message: string
   imageUrl: string | null
 }
+
+export interface AdminUserResponse {
+  id: number
+  firstName: string
+  lastName: string
+  email: string
+  codeApoge: string
+  phoneNumber: string
+  role: 'USER' | 'ADMIN'
+  verified: boolean
+  createdAt: string
+}

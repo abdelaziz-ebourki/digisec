@@ -4,6 +4,7 @@ import { AdminRoute, ProtectedRoute } from '@/components/layout/RouteGuards'
 import Home from '@/pages/Home'
 import About from '@/pages/About'
 import Activities from '@/pages/Activities'
+import Admin from '@/pages/Admin'
 import Forum from '@/pages/Forum'
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
@@ -22,7 +23,9 @@ export default function App() {
         <Route path="register" element={<Register />} />
         <Route path="verify" element={<Verify />} />
         <Route element={<ProtectedRoute />}>
-          <Route element={<AdminRoute />} />
+          <Route element={<AdminRoute />}>
+            <Route path="admin" element={<Admin />} />
+          </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
       </Route>

@@ -17,9 +17,15 @@ test.describe.serial('admin activities flows', () => {
     await page.getByRole('button', { name: /nouvelle activité/i }).click()
     await page.getByLabel('Titre').fill(title)
     await page.getByRole('button', { name: /choisir la date/i }).click()
-    const today = new Date()
-    const day = String(today.getDate()).padStart(2, '0')
-    await page.getByRole('gridcell', { name: day }).first().getByRole('button').click()
+    // react-day-picker v10 names day buttons with the full localized date
+    // ("Today, lundi 7 septembre 2026" for the current day).
+    const todayLabel = new Date().toLocaleDateString('fr-FR', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    })
+    await page.getByRole('button', { name: todayLabel }).click()
     await page.keyboard.press('Escape')
     await page.getByLabel('Description').fill('Activité créée par la suite admin E2E.')
     await page.getByLabel(/image \(optionnelle\)/i).setInputFiles(fixture)
@@ -47,5 +53,35 @@ test.describe.serial('admin activities flows', () => {
     await page.goto('/activities')
     await expect(page.getByRole('heading', { name: /nos activités/i })).toBeVisible()
     await expect(page.getByRole('button', { name: /nouvelle activité/i })).toBeHidden()
+  })
+
+  test('admin sees the administration dashboard', async ({ page, request }) => {
+    const token = await loginViaApi(request, 'admin@digisec.local', 'ChangeMe123!')
+    await page.addInitScript((jwt) => localStorage.setItem('digisec.token', jwt), token)
+
+    await page.goto('/admin')
+    await expect(page.getByRole('heading', { name: /panneau d'administration/i })).toBeVisible()
+    await expect(page.getByText('Membres', { exact: true })).toBeVisible()
+    await expect(page.getByText('admin@digisec.local')).toBeVisible()
+    await expect(page.getByRole('link', { name: /administration/i }).first()).toBeVisible()
+  })
+
+  test('non-admin is redirected away from the administration dashboard', async ({
+    page,
+    request,
+  }) => {
+    const payload = registerPayload('plain')
+    const email = payload.email
+    await request.post('http://localhost:8080/api/v1/auth/register', {
+      data: payload,
+    })
+    const verificationToken = await extractVerificationToken(email)
+    await verifyViaApi(request, verificationToken)
+    const token = await loginViaApi(request, email, payload.password)
+    await page.addInitScript((jwt) => localStorage.setItem('digisec.token', jwt), token)
+
+    await page.goto('/admin')
+    await expect(page).toHaveURL('/')
+    await expect(page.getByRole('link', { name: /administration/i })).toBeHidden()
   })
 })

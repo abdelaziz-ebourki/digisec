@@ -86,6 +86,11 @@ export function Header() {
               {item.label}
             </NavLink>
           ))}
+          {user?.role === 'ADMIN' && (
+            <NavLink to="/admin" className={linkClass}>
+              ADMINISTRATION
+            </NavLink>
+          )}
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
@@ -165,6 +170,19 @@ export function Header() {
                   {item.label}
                 </NavLink>
               ))}
+              {user?.role === 'ADMIN' && (
+                <NavLink
+                  to="/admin"
+                  onClick={() => setMobileOpen(false)}
+                  className={({ isActive }) =>
+                    `rounded-md px-3 py-2 text-sm font-medium ${
+                      isActive ? 'bg-accent text-amber-400' : 'hover:bg-accent'
+                    }`
+                  }
+                >
+                  ADMINISTRATION
+                </NavLink>
+              )}
               <div className="my-2 border-t" />
               {user ? (
                 <button
