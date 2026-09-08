@@ -90,7 +90,7 @@ jobs:
         run: npm test -- src/test/a11y.test.tsx src/test/contrast.test.ts
 
   e2e-a11y:
-    name: E2E — a11y & visual
+    name: E2E — Playwright suite
     runs-on: ubuntu-latest
     timeout-minutes: 15
     services:
@@ -142,14 +142,14 @@ jobs:
           JWT_SECRET: ci-secret-key-with-at-least-32-characters!!
           SEED_ADMIN: 'true'
         run: ./mvnw -B -DskipTests package
-      - name: Run a11y specs
+      - name: Run Playwright suite
         working-directory: e2e
         env:
           DB_USERNAME: digisec
           DB_PASSWORD: digisec
           JWT_SECRET: ci-secret-key-with-at-least-32-characters!!
           SEED_ADMIN: 'true'
-        run: npx playwright test a11y.spec.ts
+        run: npx playwright test
       - name: Upload Playwright artifacts
         if: failure()
         uses: actions/upload-artifact@v4
