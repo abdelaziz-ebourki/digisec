@@ -5,9 +5,13 @@ test.describe('public pages', () => {
     await page.goto('/')
     await expect(page.getByRole('heading', { name: /digisec/i }).first()).toBeVisible()
     await expect(page.getByText('IMPACT')).toBeVisible()
-    for (let image = 1; image <= 7; image += 1) {
+    // Curated set — keep in sync with CAROUSEL_IMAGES in
+    // ui/src/components/home/HomeContent.tsx (image 3 was repurposed as
+    // the opportunités section illustration, not a carousel slide).
+    for (const image of [1, 2, 4, 5, 6, 7]) {
       await expect(page.getByAltText(`Moment fort DIGISEC ${image}`)).toBeAttached()
     }
+    await expect(page.getByAltText('Atelier DIGISEC')).toBeAttached()
   })
 
   test('about renders missions and the full bureau', async ({ page }) => {
