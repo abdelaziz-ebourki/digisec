@@ -144,4 +144,70 @@ class ActivityServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("no image");
     }
+
+    @Test
+    void updatesFieldsAndKeepsImageByDefault() {
+        Activity a = Activity.builder().id(1L).title("Old").activityDate(LocalDate.of(2026, 1, 1))
+                .message("old").imagePath("old.png").build();
+        when(activityRepository.findById(1L)).thenReturn(Optional.of(a));
+        when(activityRepository.save(any(Activity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ActivityResponse response = activityService.update(
+                1L, "New", LocalDate.of(2026, 2, 2), "new", null, false);
+
+        assertThat(response.title()).isEqualTo("New");
+        assertThat(response.activityDate()).isEqualTo(LocalDate.of(2026, 2, 2));
+        assertThat(response.imageUrl()).isEqualTo("/api/v1/activities/1/image");
+        verify(storageService, never()).store(any());
+        verify(storageService, never()).delete(any());
+    }
+
+    @Test
+    void updateReplacesImageAndDeletesOldFile() {
+        Activity a = Activity.builder().id(1L).title("T").activityDate(LocalDate.now())
+                .message("m").imagePath("old.png").build();
+        when(activityRepository.findById(1L)).thenReturn(Optional.of(a));
+        when(storageService.store(any())).thenReturn("new.png");
+        when(activityRepository.save(any(Activity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ActivityResponse response = activityService.update(
+                1L, "T", LocalDate.now(), "m", jpeg(), false);
+
+        assertThat(response.imageUrl()).isEqualTo("/api/v1/activities/1/image");
+        ArgumentCaptor<Activity> captor = ArgumentCaptor.forClass(Activity.class);
+        verify(activityRepository).save(captor.capture());
+        assertThat(captor.getValue().getImagePath()).isEqualTo("new.png");
+        verify(storageService).delete("old.png");
+    }
+
+    @Test
+    void updateRemovesImageOnRequest() {
+        Activity a = Activity.builder().id(1L).title("T").activityDate(LocalDate.now())
+                .message("m").imagePath("old.png").build();
+        when(activityRepository.findById(1L)).thenReturn(Optional.of(a));
+        when(activityRepository.save(any(Activity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ActivityResponse response = activityService.update(
+                1L, "T", LocalDate.now(), "m", null, true);
+
+        assertThat(response.imageUrl()).isNull();
+        verify(storageService).delete("old.png");
+    }
+
+    @Test
+    void updateMissingActivityYields404() {
+        when(activityRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> activityService.update(
+                99L, "T", LocalDate.now(), "m", null, false))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("99");
+    }
+
+    @Test
+    void updateRejectsBlankTitle() {
+        assertThatThrownBy(() -> activityService.update(1L, " ", LocalDate.now(), "m", null, false))
+                .isInstanceOf(InvalidFileException.class)
+                .hasMessageContaining("Title");
+    }
 }

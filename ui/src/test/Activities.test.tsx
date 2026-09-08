@@ -8,6 +8,7 @@ import { MemoryRouter } from 'react-router-dom'
 
 const mockListActivities = vi.fn()
 const mockCreateActivity = vi.fn()
+const mockUpdateActivity = vi.fn()
 const mockDeleteActivity = vi.fn()
 let mockUser: User | null = null
 
@@ -15,6 +16,7 @@ vi.mock('@/services/activities', () => ({
   listActivities: (...args: unknown[]) => mockListActivities(...args),
   getActivity: vi.fn(),
   createActivity: (...args: unknown[]) => mockCreateActivity(...args),
+  updateActivity: (...args: unknown[]) => mockUpdateActivity(...args),
   deleteActivity: (...args: unknown[]) => mockDeleteActivity(...args),
 }))
 
@@ -140,6 +142,29 @@ describe('Activities page', () => {
     await user.click(screen.getByRole('button', { name: /^supprimer$/i }))
 
     await waitFor(() => expect(mockDeleteActivity).toHaveBeenCalledWith(1))
+  })
+
+  it('edits an activity with prefilled values', async () => {
+    mockUser = { id: 1, firstName: 'A', lastName: 'D', email: 'a@d.local', role: 'ADMIN' }
+    mockUpdateActivity.mockResolvedValue(makeActivity({ title: 'Titre modifié' }))
+    const user = userEvent.setup({ delay: null })
+    renderPage()
+
+    await user.click(
+      await screen.findByRole('button', { name: /modifier l'activité atelier/i }),
+    )
+    expect(screen.getByLabelText('Titre')).toHaveValue('Atelier Cybersécurité')
+
+    await user.clear(screen.getByLabelText('Titre'))
+    await user.type(screen.getByLabelText('Titre'), 'Titre modifié')
+    await user.click(screen.getByRole('button', { name: /^modifier$/i }))
+
+    await waitFor(() => expect(mockUpdateActivity).toHaveBeenCalledTimes(1))
+    expect(mockUpdateActivity.mock.calls[0][0]).toBe(1)
+    const payload = mockUpdateActivity.mock.calls[0][1]
+    expect(payload.title).toBe('Titre modifié')
+    expect(payload.activityDate).toBe('2026-10-15')
+    expect(payload.removeImage).toBe(false)
   })
 
   it('shows an error card with retry on API failure', async () => {

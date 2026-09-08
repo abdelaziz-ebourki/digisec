@@ -19,3 +19,11 @@ export async function createPost(payload: { title: string; content: string }): P
 export async function deletePost(id: number): Promise<void> {
   await api.delete(`/posts/${id}`)
 }
+
+export async function updatePost(
+  id: number,
+  payload: { title: string; content: string },
+): Promise<PostResponse> {
+  const { data } = await api.put<PostResponse>(`/posts/${id}`, payload)
+  return data
+}

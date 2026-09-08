@@ -6,6 +6,7 @@ import type { User } from '@/services/types'
 
 const mockListPosts = vi.fn()
 const mockCreatePost = vi.fn()
+const mockUpdatePost = vi.fn()
 const mockDeletePost = vi.fn()
 const mockListComments = vi.fn()
 const mockAddComment = vi.fn()
@@ -15,6 +16,7 @@ vi.mock('@/services/posts', () => ({
   listPosts: (...args: unknown[]) => mockListPosts(...args),
   getPost: vi.fn(),
   createPost: (...args: unknown[]) => mockCreatePost(...args),
+  updatePost: (...args: unknown[]) => mockUpdatePost(...args),
   deletePost: (...args: unknown[]) => mockDeletePost(...args),
 }))
 
@@ -174,6 +176,27 @@ describe('Forum page', () => {
     await user.click(screen.getByRole('button', { name: /^supprimer$/i }))
 
     await waitFor(() => expect(mockDeletePost).toHaveBeenCalledWith(1))
+  })
+
+  it('edits a post with prefilled values', async () => {
+    mockUser = { id: 2, firstName: 'Test', lastName: 'User', email: 't@d.local', role: 'USER' }
+    mockUpdatePost.mockResolvedValue(makePost({ title: 'Titre modifié' }))
+    const user = userEvent.setup({ delay: null })
+    renderForum()
+
+    await user.click(await screen.findByRole('button', { name: /modifier le sujet/i }))
+    expect(screen.getByLabelText('Titre')).toHaveValue('Premier sujet')
+
+    await user.clear(screen.getByLabelText('Titre'))
+    await user.type(screen.getByLabelText('Titre'), 'Titre modifié')
+    await user.click(screen.getByRole('button', { name: /^modifier$/i }))
+
+    await waitFor(() =>
+      expect(mockUpdatePost).toHaveBeenCalledWith(1, {
+        title: 'Titre modifié',
+        content: 'Contenu du sujet',
+      }),
+    )
   })
 
   it('adds a comment to an expanded post', async () => {

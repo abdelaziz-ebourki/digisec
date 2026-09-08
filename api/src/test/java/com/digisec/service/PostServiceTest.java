@@ -153,4 +153,53 @@ class PostServiceTest {
 
         verify(postRepository, org.mockito.Mockito.never()).delete(any());
     }
+
+    @Test
+    void authorCanUpdateOwnPost() {
+        when(postRepository.findById(10L)).thenReturn(Optional.of(post));
+        when(currentUserProvider.getUser("author@digisec.local")).thenReturn(author);
+        when(postRepository.save(any(Post.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        PostResponse response = postService.update(
+                10L, new PostRequest("Updated title", "Updated content"), "author@digisec.local");
+
+        assertThat(response.title()).isEqualTo("Updated title");
+        assertThat(response.content()).isEqualTo("Updated content");
+        assertThat(response.authorId()).isEqualTo(1L);
+    }
+
+    @Test
+    void adminCanUpdateAnyPost() {
+        when(postRepository.findById(10L)).thenReturn(Optional.of(post));
+        when(currentUserProvider.getUser("admin@digisec.local")).thenReturn(admin);
+        when(postRepository.save(any(Post.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        PostResponse response = postService.update(
+                10L, new PostRequest("Admin edit", "Edited by admin"), "admin@digisec.local");
+
+        assertThat(response.title()).isEqualTo("Admin edit");
+    }
+
+    @Test
+    void strangerCannotUpdatePost() {
+        when(postRepository.findById(10L)).thenReturn(Optional.of(post));
+        when(currentUserProvider.getUser("stranger@digisec.local")).thenReturn(stranger);
+
+        assertThatThrownBy(() -> postService.update(
+                10L, new PostRequest("Hijack", "Hijacked"), "stranger@digisec.local"))
+                .isInstanceOf(AccessDeniedException.class)
+                .hasMessageContaining("not allowed");
+
+        verify(postRepository, org.mockito.Mockito.never()).save(any());
+    }
+
+    @Test
+    void updateMissingPostYields404() {
+        when(postRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> postService.update(
+                99L, new PostRequest("T", "C"), "admin@digisec.local"))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Post not found");
+    }
 }

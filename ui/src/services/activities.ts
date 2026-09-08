@@ -33,3 +33,27 @@ export async function createActivity(payload: CreateActivityPayload): Promise<Ac
 export async function deleteActivity(id: number): Promise<void> {
   await api.delete(`/activities/${id}`)
 }
+
+export interface UpdateActivityPayload {
+  title: string
+  activityDate: string
+  message: string
+  file?: File | null
+  removeImage?: boolean
+}
+
+export async function updateActivity(
+  id: number,
+  payload: UpdateActivityPayload,
+): Promise<ActivityResponse> {
+  const formData = new FormData()
+  formData.append('title', payload.title)
+  formData.append('activityDate', payload.activityDate)
+  formData.append('message', payload.message)
+  if (payload.file) {
+    formData.append('file', payload.file)
+  }
+  formData.append('removeImage', String(payload.removeImage === true))
+  const { data } = await api.put<ActivityResponse>(`/activities/${id}`, formData)
+  return data
+}

@@ -7,19 +7,23 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MemoryRouter } from 'react-router-dom'
 
 const mockListActivities = vi.fn()
+const mockUpdateActivity = vi.fn()
 const mockDeleteActivity = vi.fn()
 const mockListPosts = vi.fn()
+const mockUpdatePost = vi.fn()
 const mockDeletePost = vi.fn()
 const mockListUsers = vi.fn()
 const mockUser: { current: User | null } = { current: null }
 
 vi.mock('@/services/activities', () => ({
   listActivities: (...args: unknown[]) => mockListActivities(...args),
+  updateActivity: (...args: unknown[]) => mockUpdateActivity(...args),
   deleteActivity: (...args: unknown[]) => mockDeleteActivity(...args),
 }))
 
 vi.mock('@/services/posts', () => ({
   listPosts: (...args: unknown[]) => mockListPosts(...args),
+  updatePost: (...args: unknown[]) => mockUpdatePost(...args),
   deletePost: (...args: unknown[]) => mockDeletePost(...args),
 }))
 
@@ -168,5 +172,45 @@ describe('Admin page', () => {
     mockListUsers.mockResolvedValue([makeMember()])
     await user.click(screen.getByRole('button', { name: /réessayer/i }))
     expect(await screen.findByText('Salma Bennani')).toBeInTheDocument()
+  })
+
+  it('edits an activity from its row', async () => {
+    mockUpdateActivity.mockResolvedValue(makeActivity({ title: 'Titre modifié' }))
+    const user = userEvent.setup({ delay: null })
+    renderPage()
+
+    await user.click(
+      await screen.findByRole('button', { name: /modifier l'activité atelier/i }),
+    )
+    expect(screen.getByLabelText('Titre')).toHaveValue('Atelier Cybersécurité')
+
+    await user.clear(screen.getByLabelText('Titre'))
+    await user.type(screen.getByLabelText('Titre'), 'Titre modifié')
+    await user.click(screen.getByRole('button', { name: /^modifier$/i }))
+
+    await waitFor(() => expect(mockUpdateActivity).toHaveBeenCalledTimes(1))
+    expect(mockUpdateActivity.mock.calls[0][1]).toMatchObject({ title: 'Titre modifié' })
+  })
+
+  it('edits a post from its row', async () => {
+    mockUpdatePost.mockResolvedValue(makePost({ title: 'Sujet modifié' }))
+    const user = userEvent.setup({ delay: null })
+    renderPage()
+
+    await user.click(
+      await screen.findByRole('button', { name: /modifier le sujet premier sujet/i }),
+    )
+    expect(screen.getByLabelText('Titre')).toHaveValue('Premier sujet')
+
+    await user.clear(screen.getByLabelText('Titre'))
+    await user.type(screen.getByLabelText('Titre'), 'Sujet modifié')
+    await user.click(screen.getByRole('button', { name: /^modifier$/i }))
+
+    await waitFor(() =>
+      expect(mockUpdatePost).toHaveBeenCalledWith(1, {
+        title: 'Sujet modifié',
+        content: 'Contenu du sujet',
+      }),
+    )
   })
 })

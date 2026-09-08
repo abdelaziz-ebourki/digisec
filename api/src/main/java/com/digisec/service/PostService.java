@@ -59,6 +59,15 @@ public class PostService {
         postRepository.delete(post);
     }
 
+    @Transactional
+    public PostResponse update(Long id, PostRequest request, String requesterEmail) {
+        Post post = findPost(id);
+        requireOwnerOrAdmin(post.getAuthor(), requesterEmail);
+        post.setTitle(request.title());
+        post.setContent(request.content());
+        return toResponse(postRepository.save(post));
+    }
+
     private void requireOwnerOrAdmin(User author, String requesterEmail) {
         User requester = currentUserProvider.getUser(requesterEmail);
         boolean isOwner = author.getId().equals(requester.getId());

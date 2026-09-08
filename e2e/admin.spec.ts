@@ -84,4 +84,69 @@ test.describe.serial('admin activities flows', () => {
     await expect(page).toHaveURL('/')
     await expect(page.getByRole('link', { name: /administration/i })).toBeHidden()
   })
+
+  test('admin edits an activity and a post from the dashboard', async ({ page, request }) => {
+    const token = await loginViaApi(request, 'admin@digisec.local', 'ChangeMe123!')
+    await page.addInitScript((jwt) => localStorage.setItem('digisec.token', jwt), token)
+
+    await page.goto('/admin')
+    await expect(page.getByRole('heading', { name: /panneau d'administration/i })).toBeVisible()
+
+    const activityTitle = `Activité E2E ${Date.now()}`
+    await page.goto('/activities')
+    await page.getByRole('button', { name: /nouvelle activité/i }).click()
+    await page.getByLabel('Titre').fill(activityTitle)
+    const todayLabel = new Date().toLocaleDateString('fr-FR', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    })
+    await page.getByRole('button', { name: /choisir la date/i }).click()
+    await page.getByRole('button', { name: todayLabel }).click()
+    await page.keyboard.press('Escape')
+    await page.getByLabel('Description').fill('Activité créée par la suite admin E2E.')
+    await page.getByRole('button', { name: /^publier$/i }).click()
+    await expect(page.getByText(activityTitle)).toBeVisible({ timeout: 10_000 })
+
+    await page.goto('/admin')
+    await page
+      .getByRole('button', { name: `Modifier l'activité ${activityTitle}` })
+      .click()
+    await expect(page.getByLabel('Titre')).toHaveValue(activityTitle)
+    const updatedActivityTitle = `${activityTitle} (modifié)`
+    await page.getByLabel('Titre').fill(updatedActivityTitle)
+    await page.getByRole('button', { name: /^modifier$/i }).click()
+    await expect(page.getByText(updatedActivityTitle)).toBeVisible({ timeout: 10_000 })
+
+    await page
+      .getByRole('button', { name: `supprimer l'activité ${updatedActivityTitle}` })
+      .click()
+    await page.getByRole('dialog').getByRole('button', { name: /^supprimer$/i }).click()
+    await expect(page.getByText(updatedActivityTitle)).toHaveCount(0, { timeout: 10_000 })
+
+    const postTitle = `Sujet E2E ${Date.now()}`
+    await page.goto('/forum')
+    await page.getByRole('button', { name: /nouveau sujet/i }).click()
+    await page.getByLabel('Titre').fill(postTitle)
+    await page.getByLabel('Contenu').fill('Contenu créé par la suite admin E2E.')
+    await page.getByRole('button', { name: /^publier$/i }).click()
+    await expect(page.getByText(postTitle)).toBeVisible({ timeout: 10_000 })
+
+    await page.goto('/admin')
+    await page
+      .getByRole('button', { name: `Modifier le sujet ${postTitle}` })
+      .click()
+    await expect(page.getByLabel('Titre')).toHaveValue(postTitle)
+    const updatedPostTitle = `${postTitle} (modifié)`
+    await page.getByLabel('Titre').fill(updatedPostTitle)
+    await page.getByRole('button', { name: /^modifier$/i }).click()
+    await expect(page.getByText(updatedPostTitle)).toBeVisible({ timeout: 10_000 })
+
+    await page
+      .getByRole('button', { name: `supprimer le sujet ${updatedPostTitle}` })
+      .click()
+    await page.getByRole('dialog').getByRole('button', { name: /^supprimer$/i }).click()
+    await expect(page.getByText(updatedPostTitle)).toHaveCount(0, { timeout: 10_000 })
+  })
 })

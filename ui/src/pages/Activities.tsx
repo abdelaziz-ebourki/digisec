@@ -12,11 +12,14 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { ActivityCard } from '@/components/activities/ActivityCard'
 import { CreateActivityDialog } from '@/components/activities/CreateActivityDialog'
 import { DeleteConfirmDialog } from '@/components/forum/DeleteConfirmDialog'
+import { EditActivityDialog } from '@/components/activities/EditActivityDialog'
+import type { ActivityResponse } from '@/services/types'
 
 export default function Activities() {
   const { user } = useAuth()
   const queryClient = useQueryClient()
   const [createOpen, setCreateOpen] = useState(false)
+  const [editTarget, setEditTarget] = useState<ActivityResponse | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null)
 
   const activitiesQuery = useQuery({
@@ -97,6 +100,7 @@ export default function Activities() {
               <ActivityCard
                 key={activity.id}
                 activity={activity}
+                onRequestEdit={setEditTarget}
                 onRequestDelete={setDeleteTarget}
               />
             ))}
@@ -104,6 +108,12 @@ export default function Activities() {
         ))}
 
       <CreateActivityDialog open={createOpen} onOpenChange={setCreateOpen} />
+
+      <EditActivityDialog
+        activity={editTarget}
+        open={editTarget !== null}
+        onOpenChange={(open) => !open && setEditTarget(null)}
+      />
 
       <DeleteConfirmDialog
         open={deleteTarget !== null}

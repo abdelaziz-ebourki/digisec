@@ -1,4 +1,4 @@
-import { CalendarDays, Trash2 } from 'lucide-react'
+import { CalendarDays, Pencil, Trash2 } from 'lucide-react'
 import type { ActivityResponse } from '@/services/types'
 import { formatDate } from '@/lib/date'
 import { useAuth } from '@/context/AuthContext'
@@ -13,10 +13,11 @@ import {
 
 interface ActivityCardProps {
   activity: ActivityResponse
+  onRequestEdit: (activity: ActivityResponse) => void
   onRequestDelete: (activityId: number) => void
 }
 
-export function ActivityCard({ activity, onRequestDelete }: ActivityCardProps) {
+export function ActivityCard({ activity, onRequestEdit, onRequestDelete }: ActivityCardProps) {
   const { user } = useAuth()
   const isAdmin = user?.role === 'ADMIN'
 
@@ -43,14 +44,24 @@ export function ActivityCard({ activity, onRequestDelete }: ActivityCardProps) {
             {formatDate(activity.activityDate)}
           </Badge>
           {isAdmin && (
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label={`Supprimer l'activité ${activity.title}`}
-              onClick={() => onRequestDelete(activity.id)}
-            >
-              <Trash2 className="text-muted-foreground size-4" />
-            </Button>
+            <div className="flex shrink-0">
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={`Modifier l'activité ${activity.title}`}
+                onClick={() => onRequestEdit(activity)}
+              >
+                <Pencil className="text-muted-foreground size-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={`Supprimer l'activité ${activity.title}`}
+                onClick={() => onRequestDelete(activity.id)}
+              >
+                <Trash2 className="text-muted-foreground size-4" />
+              </Button>
+            </div>
           )}
         </div>
         <CardTitle className="leading-snug">{activity.title}</CardTitle>

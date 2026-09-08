@@ -1,19 +1,22 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowRight, CalendarDays, MessagesSquare, RefreshCw, Trash2, Users } from 'lucide-react'
+import { ArrowRight, CalendarDays, MessagesSquare, Pencil, RefreshCw, Trash2, Users } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteActivity, listActivities } from '@/services/activities'
 import { listUsers } from '@/services/admin'
 import { parseApiError } from '@/services/api'
 import { deletePost, listPosts } from '@/services/posts'
 import { formatDate, formatDateTime } from '@/lib/date'
+import type { ActivityResponse, PostResponse } from '@/services/types'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DeleteConfirmDialog } from '@/components/forum/DeleteConfirmDialog'
+import { EditActivityDialog } from '@/components/activities/EditActivityDialog'
+import { EditPostDialog } from '@/components/forum/EditPostDialog'
 
 const POSTS_PAGE_SIZE = 50
 
@@ -26,6 +29,8 @@ interface DeleteTarget {
 export default function Admin() {
   const queryClient = useQueryClient()
   const [deleteTarget, setDeleteTarget] = useState<DeleteTarget | null>(null)
+  const [editActivity, setEditActivity] = useState<ActivityResponse | null>(null)
+  const [editPost, setEditPost] = useState<PostResponse | null>(null)
 
   const activitiesQuery = useQuery({ queryKey: ['activities'], queryFn: listActivities })
   const postsQuery = useQuery({
@@ -154,17 +159,28 @@ export default function Admin() {
                       {formatDate(activity.activityDate)}
                     </p>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label={`supprimer l'activité ${activity.title}`}
-                    onClick={() =>
-                      setDeleteTarget({ kind: 'activity', id: activity.id, label: activity.title })
-                    }
-                    className="shrink-0 text-muted-foreground hover:text-destructive"
-                  >
-                    <Trash2 />
-                  </Button>
+                  <div className="flex shrink-0">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`Modifier l'activité ${activity.title}`}
+                      onClick={() => setEditActivity(activity)}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <Pencil />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`supprimer l'activité ${activity.title}`}
+                      onClick={() =>
+                        setDeleteTarget({ kind: 'activity', id: activity.id, label: activity.title })
+                      }
+                      className="shrink-0 text-muted-foreground hover:text-destructive"
+                    >
+                      <Trash2 />
+                    </Button>
+                  </div>
                 </div>
               ))}
             </CardContent>
@@ -193,15 +209,26 @@ export default function Admin() {
                       par {post.authorFirstName} · {formatDateTime(post.createdAt)}
                     </p>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label={`supprimer le sujet ${post.title}`}
-                    onClick={() => setDeleteTarget({ kind: 'post', id: post.id, label: post.title })}
-                    className="shrink-0 text-muted-foreground hover:text-destructive"
-                  >
-                    <Trash2 />
-                  </Button>
+                  <div className="flex shrink-0">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`Modifier le sujet ${post.title}`}
+                      onClick={() => setEditPost(post)}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <Pencil />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`supprimer le sujet ${post.title}`}
+                      onClick={() => setDeleteTarget({ kind: 'post', id: post.id, label: post.title })}
+                      className="shrink-0 text-muted-foreground hover:text-destructive"
+                    >
+                      <Trash2 />
+                    </Button>
+                  </div>
                 </div>
               ))}
             </CardContent>
@@ -240,8 +267,19 @@ export default function Admin() {
         </div>
       )}
 
-      <DeleteConfirmDialog
-        open={deleteTarget !== null}
+      <EditActivityDialog
+        activity={editActivity}
+        open={editActivity !== null}
+        onOpenChange={(open) => !open && setEditActivity(null)}
+      />
+
+      <EditPostDialog
+        post={editPost}
+        open={editPost !== null}
+        onOpenChange={(open) => !open && setEditPost(null)}
+      />
+
+      <DeleteConfirmDialog        open={deleteTarget !== null}
         onOpenChange={(open) => !open && setDeleteTarget(null)}
         onConfirm={() => {
           if (deleteTarget !== null) deleteMutation.mutate(deleteTarget)

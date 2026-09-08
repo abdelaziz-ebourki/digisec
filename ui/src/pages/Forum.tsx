@@ -13,7 +13,9 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { PostCard } from '@/components/forum/PostCard'
 import { CreatePostDialog } from '@/components/forum/CreatePostDialog'
 import { DeleteConfirmDialog } from '@/components/forum/DeleteConfirmDialog'
+import { EditPostDialog } from '@/components/forum/EditPostDialog'
 import { Pagination } from '@/components/forum/Pagination'
+import type { PostResponse } from '@/services/types'
 
 const PAGE_SIZE = 10
 
@@ -22,6 +24,7 @@ export default function Forum() {
   const queryClient = useQueryClient()
   const [page, setPage] = useState(0)
   const [createOpen, setCreateOpen] = useState(false)
+  const [editTarget, setEditTarget] = useState<PostResponse | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null)
 
   const postsQuery = useQuery({
@@ -101,7 +104,7 @@ export default function Forum() {
           <>
             <div className="space-y-6">
               {postsQuery.data.content.map((post) => (
-                <PostCard key={post.id} post={post} onRequestDelete={setDeleteTarget} />
+                <PostCard key={post.id} post={post} onRequestEdit={setEditTarget} onRequestDelete={setDeleteTarget} />
               ))}
             </div>
             <Pagination
@@ -113,6 +116,12 @@ export default function Forum() {
         ))}
 
       <CreatePostDialog open={createOpen} onOpenChange={setCreateOpen} />
+
+      <EditPostDialog
+        post={editTarget}
+        open={editTarget !== null}
+        onOpenChange={(open) => !open && setEditTarget(null)}
+      />
 
       <DeleteConfirmDialog
         open={deleteTarget !== null}

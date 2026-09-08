@@ -71,6 +71,39 @@ public class ActivityService {
         activityRepository.delete(activity);
     }
 
+    @Transactional
+    public ActivityResponse update(Long id, String title, LocalDate activityDate, String message,
+                                   MultipartFile image, boolean removeImage) {
+        if (title == null || title.isBlank()) {
+            throw new InvalidFileException("Title is required");
+        }
+        if (activityDate == null) {
+            throw new InvalidFileException("Activity date is required");
+        }
+        if (message == null || message.isBlank()) {
+            throw new InvalidFileException("Message is required");
+        }
+        if (message.length() > MAX_MESSAGE_LENGTH) {
+            throw new InvalidFileException("Message must not exceed " + MAX_MESSAGE_LENGTH + " characters");
+        }
+        Activity activity = findActivity(id);
+        activity.setTitle(title.trim());
+        activity.setActivityDate(activityDate);
+        activity.setMessage(message.trim());
+
+        if (image != null && !image.isEmpty()) {
+            String newPath = storageService.store(image);
+            if (activity.getImagePath() != null) {
+                storageService.delete(activity.getImagePath());
+            }
+            activity.setImagePath(newPath);
+        } else if (removeImage && activity.getImagePath() != null) {
+            storageService.delete(activity.getImagePath());
+            activity.setImagePath(null);
+        }
+        return toResponse(activityRepository.save(activity));
+    }
+
     @Transactional(readOnly = true)
     public StoredFile loadImage(Long id) {
         Activity activity = findActivity(id);

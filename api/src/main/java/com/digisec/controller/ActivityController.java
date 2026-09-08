@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -72,5 +73,17 @@ public class ActivityController {
     @Operation(summary = "Delete an activity (admin only)")
     public void delete(@PathVariable Long id) {
         activityService.delete(id);
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Update an activity (admin only)")
+    public ActivityResponse update(
+            @PathVariable Long id,
+            @RequestParam("title") String title,
+            @RequestParam("activityDate") LocalDate activityDate,
+            @RequestParam("message") String message,
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "removeImage", defaultValue = "false") boolean removeImage) {
+        return activityService.update(id, title, activityDate, message, file, removeImage);
     }
 }

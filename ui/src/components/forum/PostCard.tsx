@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Trash2 } from 'lucide-react'
+import { Pencil, Trash2 } from 'lucide-react'
 import type { PostResponse } from '@/services/types'
 import { formatDateTime } from '@/lib/date'
 import { useAuth } from '@/context/AuthContext'
@@ -9,10 +9,11 @@ import { CommentSection, CommentsToggle } from '@/components/forum/CommentSectio
 
 interface PostCardProps {
   post: PostResponse
+  onRequestEdit: (post: PostResponse) => void
   onRequestDelete: (postId: number) => void
 }
 
-export function PostCard({ post, onRequestDelete }: PostCardProps) {
+export function PostCard({ post, onRequestEdit, onRequestDelete }: PostCardProps) {
   const { user } = useAuth()
   const [expanded, setExpanded] = useState(false)
 
@@ -36,14 +37,24 @@ export function PostCard({ post, onRequestDelete }: PostCardProps) {
           </div>
         </div>
         {canDelete && (
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label={`Supprimer le sujet ${post.title}`}
-            onClick={() => onRequestDelete(post.id)}
-          >
-            <Trash2 className="text-muted-foreground size-4" />
-          </Button>
+          <div className="flex shrink-0">
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label={`Modifier le sujet ${post.title}`}
+              onClick={() => onRequestEdit(post)}
+            >
+              <Pencil className="text-muted-foreground size-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label={`Supprimer le sujet ${post.title}`}
+              onClick={() => onRequestDelete(post.id)}
+            >
+              <Trash2 className="text-muted-foreground size-4" />
+            </Button>
+          </div>
         )}
       </CardHeader>
       <CardContent className="space-y-2">

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,5 +60,13 @@ public class PostController {
     public void delete(@PathVariable Long id,
                        @AuthenticationPrincipal UserDetails principal) {
         postService.delete(id, principal.getUsername());
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update a post (author or admin)")
+    public PostResponse update(@PathVariable Long id,
+                               @Valid @RequestBody PostRequest request,
+                               @AuthenticationPrincipal UserDetails principal) {
+        return postService.update(id, request, principal.getUsername());
     }
 }
