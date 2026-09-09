@@ -55,6 +55,6 @@ test.describe.serial('auth flows', () => {
     await page.getByLabel('Mot de passe').fill(payload.password)
     await page.getByRole('button', { name: /se connecter/i }).click()
 
-    await expect(page.getByText(/verify your email address/i)).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText(/veuillez vérifier votre adresse e-mail/i)).toBeVisible({ timeout: 10_000 })
   })
 })

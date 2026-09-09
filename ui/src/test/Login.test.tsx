@@ -62,7 +62,7 @@ describe('Login page', () => {
     await user.type(screen.getByLabelText('Mot de passe'), 'wrong')
     await user.click(screen.getByRole('button', { name: /se connecter/i }))
 
-    expect(await screen.findByText('Invalid email or password')).toBeInTheDocument()
+    expect(await screen.findByText('E-mail ou mot de passe invalide')).toBeInTheDocument()
     expect(mockNavigate).not.toHaveBeenCalled()
   })
 

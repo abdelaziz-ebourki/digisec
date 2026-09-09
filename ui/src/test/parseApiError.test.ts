@@ -16,7 +16,7 @@ function axiosErrorWith(status: number, data: unknown): AxiosError {
 describe('parseApiError', () => {
   it('extracts ProblemDetail fields', () => {
     const error = parseApiError(axiosErrorWith(409, { detail: 'An account with this email already exists' }))
-    expect(error).toMatchObject({ status: 409, message: 'An account with this email already exists' })
+    expect(error).toMatchObject({ status: 409, message: 'Un compte existe déjà avec cet e-mail' })
   })
 
   it('falls back to the title when detail is missing', () => {
@@ -31,6 +31,16 @@ describe('parseApiError', () => {
     expect(error.fieldErrors).toEqual({ email: 'Email must be valid' })
   })
 
+  it('translates field error values to French', () => {
+    const error = parseApiError(
+      axiosErrorWith(409, {
+        detail: 'Duplicate',
+        errors: { email: 'An account with this email already exists' },
+      }),
+    )
+    expect(error.fieldErrors).toEqual({ email: 'Un compte existe déjà avec cet e-mail' })
+  })
+
   it('normalizes network failures without a response', () => {
     const networkError = new AxiosError('Network Error')
     const error = parseApiError(networkError)
@@ -43,5 +53,37 @@ describe('parseApiError', () => {
       status: 0,
       message: 'Une erreur inattendue est survenue',
     })
+  })
+
+  it.each([
+    ['Invalid email or password', 'E-mail ou mot de passe invalide'],
+    [
+      'Please verify your email address before logging in',
+      'Veuillez vérifier votre adresse e-mail avant de vous connecter',
+    ],
+    [
+      'Only JPEG, PNG and WebP images are allowed',
+      'Seules les images JPEG, PNG et WebP sont acceptées',
+    ],
+    [
+      'An account with this phone number already exists',
+      'Un compte existe déjà avec ce numéro de téléphone',
+    ],
+    [
+      'This verification link has expired. Please register again.',
+      'Ce lien de vérification a expiré. Veuillez vous réinscrire.',
+    ],
+    ['Title is required', 'Le titre est requis'],
+    ["Activity date is required", "La date de l'activité est requise"],
+    ['Message must not exceed 2000 characters', 'Le message est trop long'],
+    ['You are not allowed to delete this resource', 'Vous n’êtes pas autorisé à supprimer cette ressource'],
+  ])('translates the backend message %s to French', (backend, french) => {
+    const error = parseApiError(axiosErrorWith(400, { detail: backend }))
+    expect(error.message).toBe(french)
+  })
+
+  it('passes unmapped messages through untouched', () => {
+    const error = parseApiError(axiosErrorWith(500, { detail: 'Something brand new' }))
+    expect(error.message).toBe('Something brand new')
   })
 })
