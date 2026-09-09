@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mockTyped = vi.hoisted(() => ({ text: 'Join US' }))
 
@@ -7,10 +7,21 @@ vi.mock('@/hooks/useTypewriter', () => ({
   useTypewriter: () => mockTyped.text,
 }))
 
+const mockGetStats = vi.fn()
+
+vi.mock('@/services/stats', () => ({
+  getStats: (...args: unknown[]) => mockGetStats(...args),
+}))
+
 import Home from '@/pages/Home'
 import { renderWithProviders } from '@/test/helpers'
 
 describe('Home page', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockGetStats.mockResolvedValue({ activities: 6, posts: 5, members: 4 })
+  })
+
   it('renders the typewriter headline and main sections', async () => {
     renderWithProviders(<Home />)
 
@@ -35,6 +46,15 @@ describe('Home page', () => {
       'src',
       '/images/home/opportunites.jpg',
     )
+  })
+
+  it('renders live club stats from the API', async () => {
+    renderWithProviders(<Home />)
+
+    expect(await screen.findByText('4 membres')).toBeInTheDocument()
+    expect(screen.getByText('6 événements')).toBeInTheDocument()
+    expect(screen.getByText('5 sujets')).toBeInTheDocument()
+    expect(mockGetStats).toHaveBeenCalledOnce()
   })
 
   it('links the membership duo to the right routes', () => {

@@ -56,3 +56,9 @@ export interface AdminUserResponse {
   verified: boolean
   createdAt: string
 }
+
+export interface StatsResponse {
+  activities: number
+  posts: number
+  members: number
+}

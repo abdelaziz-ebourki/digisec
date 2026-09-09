@@ -182,7 +182,7 @@ export default function Admin() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      aria-label={`supprimer l'activité ${activity.title}`}
+                      aria-label={`Supprimer l'activité ${activity.title}`}
                       onClick={() =>
                         setDeleteTarget({ kind: 'activity', id: activity.id, label: activity.title })
                       }
@@ -232,7 +232,7 @@ export default function Admin() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      aria-label={`supprimer le sujet ${post.title}`}
+                      aria-label={`Supprimer le sujet ${post.title}`}
                       onClick={() => setDeleteTarget({ kind: 'post', id: post.id, label: post.title })}
                       className="shrink-0 text-muted-foreground hover:text-destructive"
                     >

@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import { ArrowRight } from 'lucide-react'
 import { useTypewriter } from '@/hooks/useTypewriter'
+import { getStats } from '@/services/stats'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 
@@ -18,6 +20,7 @@ export function Hero() {
     deleteSpeed: 50,
     holdTime: 700,
   })
+  const statsQuery = useQuery({ queryKey: ['stats'], queryFn: getStats, retry: false })
 
   return (
     <section className="relative -mt-14 flex min-h-screen items-center justify-center overflow-hidden bg-neutral-950 text-white">
@@ -74,10 +77,16 @@ export function Hero() {
           </Button>
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm text-white">
-          <span>14 membres</span>
-          <span aria-hidden>·</span>
-          <span>7 événements</span>
-          <span aria-hidden>·</span>
+          {statsQuery.data ? (
+            <>
+              <span>{statsQuery.data.members} membres</span>
+              <span aria-hidden>·</span>
+              <span>{statsQuery.data.activities} événements</span>
+              <span aria-hidden>·</span>
+              <span>{statsQuery.data.posts} sujets</span>
+              <span aria-hidden>·</span>
+            </>
+          ) : null}
           <span>FSBM Casablanca</span>
         </div>
       </div>
