@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { addComment, deleteComment, listComments } from '@/services/comments'
 import { parseApiError } from '@/services/api'
+import { useSingleFlight } from '@/hooks/useSingleFlight'
 import type { CommentResponse } from '@/services/types'
 import { formatDateTime } from '@/lib/date'
 import { useAuth } from '@/context/AuthContext'
@@ -21,6 +22,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
   const { user } = useAuth()
   const queryClient = useQueryClient()
   const [text, setText] = useState('')
+  const singleFlight = useSingleFlight()
 
   const commentsQuery = useQuery({
     queryKey: ['comments', postId],
@@ -36,6 +38,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
       invalidate()
     },
     onError: (error) => toast.error(parseApiError(error).message),
+    onSettled: singleFlight.release,
   })
 
   const deleteMutation = useMutation({
@@ -49,7 +52,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
 
   const handleAdd = (event: FormEvent) => {
     event.preventDefault()
-    if (text.trim()) addMutation.mutate()
+    if (text.trim()) singleFlight.run(() => addMutation.mutate())
   }
 
   const canDelete = (comment: CommentResponse) =>

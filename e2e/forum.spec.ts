@@ -48,6 +48,29 @@ test.describe.serial('forum flows', () => {
     await expect(page.getByRole('heading', { name: title })).toHaveCount(0, { timeout: 10_000 })
   })
 
+  test('double-clicking publish creates a single post', async ({ page, request }) => {
+    const token = await loginViaApi(request, 'admin@digisec.local', 'ChangeMe123!')
+    const title = `Sujet E2E doublon ${Date.now()}`
+    await page.goto('/forum')
+    await page.evaluate((jwt) => localStorage.setItem('digisec.token', jwt), token)
+    await page.reload()
+
+    await page.getByRole('button', { name: /nouveau sujet/i }).click()
+    await page.getByLabel('Titre').fill(title)
+    await page.getByLabel('Contenu').fill('Clic rapide sur Publier.')
+    await page.getByRole('button', { name: /^publier$/i }).dblclick()
+    await expect(page.getByRole('heading', { name: title })).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByRole('heading', { name: title })).toHaveCount(1, { timeout: 10_000 })
+
+    await page
+      .locator('[data-slot="card"]')
+      .filter({ hasText: title })
+      .getByRole('button', { name: new RegExp(`supprimer le sujet ${title}`, 'i') })
+      .click()
+    await page.getByRole('dialog').getByRole('button', { name: /^supprimer$/i }).click()
+    await expect(page.getByRole('heading', { name: title })).toHaveCount(0, { timeout: 10_000 })
+  })
+
   test('visitor cannot see the composer', async ({ page }) => {
     await page.goto('/forum')
     await expect(page.getByRole('link', { name: /connectez-vous pour publier/i })).toBeVisible()

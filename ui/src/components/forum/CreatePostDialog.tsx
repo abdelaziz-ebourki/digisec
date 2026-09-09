@@ -4,6 +4,7 @@ import type { FormEvent } from 'react'
 import { toast } from 'sonner'
 import { createPost } from '@/services/posts'
 import { parseApiError } from '@/services/api'
+import { useSingleFlight } from '@/hooks/useSingleFlight'
 import type { PostResponse } from '@/services/types'
 import { Button } from '@/components/ui/button'
 import {
@@ -28,6 +29,7 @@ export function CreatePostDialog({ open, onOpenChange, onCreated }: CreatePostDi
   const queryClient = useQueryClient()
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const singleFlight = useSingleFlight()
 
   const mutation = useMutation({
     mutationFn: () => createPost({ title: title.trim(), content: content.trim() }),
@@ -40,11 +42,12 @@ export function CreatePostDialog({ open, onOpenChange, onCreated }: CreatePostDi
       onCreated?.(post)
     },
     onError: (error) => toast.error(parseApiError(error).message),
+    onSettled: singleFlight.release,
   })
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    if (title.trim() && content.trim()) mutation.mutate()
+    if (title.trim() && content.trim()) singleFlight.run(() => mutation.mutate())
   }
 
   return (

@@ -7,6 +7,7 @@ import { CalendarIcon, LoaderCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { updateActivity } from '@/services/activities'
 import { parseApiError } from '@/services/api'
+import { useSingleFlight } from '@/hooks/useSingleFlight'
 import type { ActivityResponse } from '@/services/types'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -48,6 +49,7 @@ export function EditActivityDialog({ activity, open, onOpenChange }: EditActivit
   const [message, setMessage] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const [removeImage, setRemoveImage] = useState(false)
+  const singleFlight = useSingleFlight()
 
   useEffect(() => {
     if (activity && open) {
@@ -74,11 +76,14 @@ export function EditActivityDialog({ activity, open, onOpenChange }: EditActivit
       onOpenChange(false)
     },
     onError: (error) => toast.error(parseApiError(error).message),
+    onSettled: singleFlight.release,
   })
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    if (activity && title.trim() && date && message.trim()) mutation.mutate()
+    if (activity && title.trim() && date && message.trim()) {
+      singleFlight.run(() => mutation.mutate())
+    }
   }
 
   return (

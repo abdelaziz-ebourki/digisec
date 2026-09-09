@@ -6,6 +6,7 @@ import { fr } from 'date-fns/locale'
 import { CalendarIcon, LoaderCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { createActivity } from '@/services/activities'
+import { useSingleFlight } from '@/hooks/useSingleFlight'
 import type { ActivityResponse } from '@/services/types'
 import { parseApiError } from '@/services/api'
 import { Button } from '@/components/ui/button'
@@ -39,6 +40,7 @@ export function CreateActivityDialog({ open, onOpenChange }: CreateActivityDialo
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [message, setMessage] = useState('')
   const [file, setFile] = useState<File | null>(null)
+  const singleFlight = useSingleFlight()
 
   const mutation = useMutation({
     mutationFn: () =>
@@ -59,11 +61,12 @@ export function CreateActivityDialog({ open, onOpenChange }: CreateActivityDialo
       return activity
     },
     onError: (error) => toast.error(parseApiError(error).message),
+    onSettled: singleFlight.release,
   })
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    if (title.trim() && date && message.trim()) mutation.mutate()
+    if (title.trim() && date && message.trim()) singleFlight.run(() => mutation.mutate())
   }
 
   return (

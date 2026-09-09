@@ -4,6 +4,7 @@ import type { FormEvent } from 'react'
 import { toast } from 'sonner'
 import { updatePost } from '@/services/posts'
 import { parseApiError } from '@/services/api'
+import { useSingleFlight } from '@/hooks/useSingleFlight'
 import type { PostResponse } from '@/services/types'
 import { Button } from '@/components/ui/button'
 import {
@@ -28,6 +29,7 @@ export function EditPostDialog({ post, open, onOpenChange }: EditPostDialogProps
   const queryClient = useQueryClient()
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const singleFlight = useSingleFlight()
 
   useEffect(() => {
     if (post && open) {
@@ -45,11 +47,12 @@ export function EditPostDialog({ post, open, onOpenChange }: EditPostDialogProps
       onOpenChange(false)
     },
     onError: (error) => toast.error(parseApiError(error).message),
+    onSettled: singleFlight.release,
   })
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    if (post && title.trim() && content.trim()) mutation.mutate()
+    if (post && title.trim() && content.trim()) singleFlight.run(() => mutation.mutate())
   }
 
   return (
