@@ -13,6 +13,7 @@ const mockListPosts = vi.fn()
 const mockUpdatePost = vi.fn()
 const mockDeletePost = vi.fn()
 const mockListUsers = vi.fn()
+const mockDeleteUser = vi.fn()
 const mockUser: { current: User | null } = { current: null }
 
 vi.mock('@/services/activities', () => ({
@@ -29,6 +30,7 @@ vi.mock('@/services/posts', () => ({
 
 vi.mock('@/services/admin', () => ({
   listUsers: (...args: unknown[]) => mockListUsers(...args),
+  deleteUser: (...args: unknown[]) => mockDeleteUser(...args),
 }))
 
 vi.mock('@/context/AuthContext', () => ({
@@ -157,6 +159,26 @@ describe('Admin page', () => {
     await user.click(screen.getByRole('button', { name: /^supprimer$/i }))
 
     await waitFor(() => expect(mockDeletePost).toHaveBeenCalledWith(1))
+  })
+
+  it('deletes a member after confirmation, but never an admin', async () => {
+    mockDeleteUser.mockResolvedValue(undefined)
+    mockListUsers.mockResolvedValue([
+      makeMember({ id: 9, firstName: 'Admin', email: 'admin@digisec.local', role: 'ADMIN' }),
+      makeMember(),
+    ])
+    const user = userEvent.setup({ delay: null })
+    renderPage()
+
+    await user.click(
+      await screen.findByRole('button', { name: /supprimer le membre salma bennani/i }),
+    )
+    await user.click(screen.getByRole('button', { name: /^supprimer$/i }))
+
+    await waitFor(() => expect(mockDeleteUser).toHaveBeenCalledWith(2))
+    expect(
+      screen.queryByRole('button', { name: /supprimer le membre admin/i }),
+    ).not.toBeInTheDocument()
   })
 
   it('shows an error card with retry on API failure', async () => {

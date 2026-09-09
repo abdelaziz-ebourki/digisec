@@ -3,17 +3,26 @@ package com.digisec.service;
 import com.digisec.dto.AdminUserResponse;
 import com.digisec.entity.Role;
 import com.digisec.entity.User;
+import com.digisec.exception.ConflictException;
+import com.digisec.exception.ResourceNotFoundException;
+import com.digisec.repository.CommentRepository;
+import com.digisec.repository.PostRepository;
 import com.digisec.repository.UserRepository;
+import com.digisec.repository.VerificationTokenRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,11 +32,21 @@ class AdminServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private PostRepository postRepository;
+
+    @Mock
+    private CommentRepository commentRepository;
+
+    @Mock
+    private VerificationTokenRepository verificationTokenRepository;
+
     private AdminService adminService;
 
     @BeforeEach
     void setUp() {
-        adminService = new AdminService(userRepository);
+        adminService = new AdminService(userRepository, postRepository, commentRepository,
+                verificationTokenRepository);
     }
 
     private User user(Long id, String email, Role role, boolean verified) {
@@ -92,5 +111,71 @@ class AdminServiceTest {
 
         assertThat(response.role()).isEqualTo("ADMIN");
         assertThat(response.verified()).isTrue();
+    }
+
+    @Test
+    void deletesContentFreeUserWithTokens() {
+        User target = user(7L, "e2e-1@digisec.local", Role.USER, true);
+        when(userRepository.findById(7L)).thenReturn(Optional.of(target));
+        when(postRepository.existsByAuthorId(7L)).thenReturn(false);
+        when(commentRepository.existsByAuthorId(7L)).thenReturn(false);
+        when(verificationTokenRepository.findByUserId(7L)).thenReturn(List.of());
+
+        adminService.deleteUser(7L, "admin@digisec.local");
+
+        verify(verificationTokenRepository).deleteAll(List.of());
+        verify(userRepository).delete(target);
+    }
+
+    @Test
+    void rejectsUnknownUser() {
+        when(userRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> adminService.deleteUser(99L, "admin@digisec.local"))
+                .isInstanceOf(ResourceNotFoundException.class);
+        verify(userRepository, never()).delete(org.mockito.ArgumentMatchers.any());
+    }
+
+    @Test
+    void rejectsSelfDelete() {
+        User admin = user(9L, "admin@digisec.local", Role.ADMIN, true);
+        when(userRepository.findById(9L)).thenReturn(Optional.of(admin));
+
+        assertThatThrownBy(() -> adminService.deleteUser(9L, "admin@digisec.local"))
+                .isInstanceOf(AccessDeniedException.class);
+        verify(userRepository, never()).delete(org.mockito.ArgumentMatchers.any());
+    }
+
+    @Test
+    void rejectsDeletingAnotherAdmin() {
+        User otherAdmin = user(10L, "root@digisec.local", Role.ADMIN, true);
+        when(userRepository.findById(10L)).thenReturn(Optional.of(otherAdmin));
+
+        assertThatThrownBy(() -> adminService.deleteUser(10L, "admin@digisec.local"))
+                .isInstanceOf(AccessDeniedException.class);
+        verify(userRepository, never()).delete(org.mockito.ArgumentMatchers.any());
+    }
+
+    @Test
+    void rejectsUserWithPosts() {
+        User target = user(7L, "e2e-1@digisec.local", Role.USER, true);
+        when(userRepository.findById(7L)).thenReturn(Optional.of(target));
+        when(postRepository.existsByAuthorId(7L)).thenReturn(true);
+
+        assertThatThrownBy(() -> adminService.deleteUser(7L, "admin@digisec.local"))
+                .isInstanceOf(ConflictException.class);
+        verify(userRepository, never()).delete(org.mockito.ArgumentMatchers.any());
+    }
+
+    @Test
+    void rejectsUserWithComments() {
+        User target = user(7L, "e2e-1@digisec.local", Role.USER, true);
+        when(userRepository.findById(7L)).thenReturn(Optional.of(target));
+        when(postRepository.existsByAuthorId(7L)).thenReturn(false);
+        when(commentRepository.existsByAuthorId(7L)).thenReturn(true);
+
+        assertThatThrownBy(() -> adminService.deleteUser(7L, "admin@digisec.local"))
+                .isInstanceOf(ConflictException.class);
+        verify(userRepository, never()).delete(org.mockito.ArgumentMatchers.any());
     }
 }

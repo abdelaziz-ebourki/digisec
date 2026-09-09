@@ -63,8 +63,7 @@ export async function loginViaApi(
   return (await response.json()).accessToken
 }
 
-export async function createPostViaApi(
-  request: import('@playwright/test').APIRequestContext,
+export async function createPostViaApi(  request: import('@playwright/test').APIRequestContext,
   token: string,
   title: string,
   content: string,
@@ -77,4 +76,35 @@ export async function createPostViaApi(
     throw new Error(`Create post failed: ${response.status()}`)
   }
   return (await response.json()).id
+}
+
+const ADMIN_EMAIL = 'admin@digisec.local'
+const ADMIN_PASSWORD = 'ChangeMe123!'
+
+/**
+ * Delete a content-free user created by a spec (keeps the dev database from
+ * accumulating one account per run). The backend refuses users with posts or
+ * comments (409), so call this after deleting the user's content.
+ */
+export async function deleteUserByEmail(
+  request: import('@playwright/test').APIRequestContext,
+  email: string,
+): Promise<void> {
+  const adminToken = await loginViaApi(request, ADMIN_EMAIL, ADMIN_PASSWORD)
+  const usersResponse = await request.get('http://localhost:8080/api/v1/admin/users', {
+    headers: { Authorization: `Bearer ${adminToken}` },
+  })
+  if (!usersResponse.ok()) {
+    throw new Error(`List users failed: ${usersResponse.status()}`)
+  }
+  const users = (await usersResponse.json()) as { id: number; email: string }[]
+  const target = users.find((user) => user.email === email)
+  if (!target) return
+  const deleteResponse = await request.delete(
+    `http://localhost:8080/api/v1/admin/users/${target.id}`,
+    { headers: { Authorization: `Bearer ${adminToken}` } },
+  )
+  if (!deleteResponse.ok()) {
+    throw new Error(`Delete user ${email} failed: ${deleteResponse.status()}`)
+  }
 }

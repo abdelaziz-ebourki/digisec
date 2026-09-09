@@ -77,6 +77,12 @@ describe('parseApiError', () => {
     ["Activity date is required", "La date de l'activité est requise"],
     ['Message must not exceed 2000 characters', 'Le message est trop long'],
     ['You are not allowed to delete this resource', 'Vous n’êtes pas autorisé à supprimer cette ressource'],
+    ['You cannot delete your own account', 'Vous ne pouvez pas supprimer votre propre compte'],
+    [
+      'User has posts or comments and cannot be deleted',
+      'Ce membre a des sujets ou commentaires et ne peut pas être supprimé',
+    ],
+    ['User not found: 42', 'Utilisateur introuvable'],
   ])('translates the backend message %s to French', (backend, french) => {
     const error = parseApiError(axiosErrorWith(400, { detail: backend }))
     expect(error.message).toBe(french)

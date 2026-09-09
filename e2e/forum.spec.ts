@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { extractVerificationToken, loginViaApi, registerPayload, verifyViaApi } from './helpers'
+import { deleteUserByEmail, extractVerificationToken, loginViaApi, registerPayload, verifyViaApi } from './helpers'
 
 test.describe.serial('forum flows', () => {
   test('member creates a post, comments, then deletes it', async ({ page, request }) => {
@@ -46,6 +46,8 @@ test.describe.serial('forum flows', () => {
       .click()
     await page.getByRole('dialog').getByRole('button', { name: /^supprimer$/i }).click()
     await expect(page.getByRole('heading', { name: title })).toHaveCount(0, { timeout: 10_000 })
+
+    await deleteUserByEmail(request, email)
   })
 
   test('double-clicking publish creates a single post', async ({ page, request }) => {

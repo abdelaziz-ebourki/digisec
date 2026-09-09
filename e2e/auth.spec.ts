@@ -1,12 +1,13 @@
 import { expect, test } from '@playwright/test'
 import {
+  deleteUserByEmail,
   extractVerificationToken,
   registerPayload,
   uniqueEmail,
 } from './helpers'
 
 test.describe.serial('auth flows', () => {
-  test('full loop: register, verify via emailed link, login, logout', async ({ page }) => {
+  test('full loop: register, verify via emailed link, login, logout', async ({ page, request }) => {
     const payload = registerPayload('e2e')
     const email = payload.email
 
@@ -34,9 +35,11 @@ test.describe.serial('auth flows', () => {
     await page.getByRole('button', { name: 'E2E' }).click()
     await page.getByRole('menuitem', { name: /déconnexion/i }).click()
     await expect(page.getByRole('link', { name: 'Connexion' })).toBeVisible()
+
+    await deleteUserByEmail(request, email)
   })
 
-  test('unverified account cannot log in', async ({ page }) => {
+  test('unverified account cannot log in', async ({ page, request }) => {
     const payload = registerPayload('lazy')
     const email = payload.email
 
@@ -56,5 +59,7 @@ test.describe.serial('auth flows', () => {
     await page.getByRole('button', { name: /se connecter/i }).click()
 
     await expect(page.getByText(/veuillez vérifier votre adresse e-mail/i)).toBeVisible({ timeout: 10_000 })
+
+    await deleteUserByEmail(request, email)
   })
 })

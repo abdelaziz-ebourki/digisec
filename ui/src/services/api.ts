@@ -33,12 +33,17 @@ const MESSAGE_TRANSLATIONS: Record<string, string> = {
   'You are not allowed to delete this resource':
     'Vous n’êtes pas autorisé à supprimer cette ressource',
   'Authenticated user no longer exists': 'Session invalide, veuillez vous reconnecter',
+  'You cannot delete your own account': 'Vous ne pouvez pas supprimer votre propre compte',
+  'Administrators cannot be deleted': 'Les administrateurs ne peuvent pas être supprimés',
+  'User has posts or comments and cannot be deleted':
+    'Ce membre a des sujets ou commentaires et ne peut pas être supprimé',
 }
 
 function translateMessage(message: string): string {
   const exact = MESSAGE_TRANSLATIONS[message]
   if (exact) return exact
   if (message.startsWith('Message must not exceed')) return 'Le message est trop long'
+  if (message.startsWith('User not found')) return 'Utilisateur introuvable'
   return message
 }
 

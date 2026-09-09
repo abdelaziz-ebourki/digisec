@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowRight, CalendarDays, MessagesSquare, Pencil, RefreshCw, Trash2, Users } from 'lucide-react'
 import { toast } from 'sonner'
 import { deleteActivity, listActivities } from '@/services/activities'
-import { listUsers } from '@/services/admin'
+import { deleteUser, listUsers } from '@/services/admin'
 import { parseApiError } from '@/services/api'
 import { deletePost, listPosts } from '@/services/posts'
 import { formatDate, formatDateTime } from '@/lib/date'
@@ -21,7 +21,7 @@ import { EditPostDialog } from '@/components/forum/EditPostDialog'
 const POSTS_PAGE_SIZE = 50
 
 interface DeleteTarget {
-  kind: 'activity' | 'post'
+  kind: 'activity' | 'post' | 'user'
   id: number
   label: string
 }
@@ -40,13 +40,23 @@ export default function Admin() {
   const usersQuery = useQuery({ queryKey: ['admin-users'], queryFn: listUsers })
 
   const deleteMutation = useMutation({
-    mutationFn: (target: DeleteTarget) =>
-      target.kind === 'activity' ? deleteActivity(target.id) : deletePost(target.id),
+    mutationFn: (target: DeleteTarget) => {
+      if (target.kind === 'activity') return deleteActivity(target.id)
+      if (target.kind === 'post') return deletePost(target.id)
+      return deleteUser(target.id)
+    },
     onSuccess: (_, target) => {
-      toast.success(target.kind === 'activity' ? 'Activité supprimée !' : 'Sujet supprimé !')
+      toast.success(
+        target.kind === 'activity'
+          ? 'Activité supprimée !'
+          : target.kind === 'post'
+            ? 'Sujet supprimé !'
+            : 'Membre supprimé !',
+      )
       setDeleteTarget(null)
       void queryClient.invalidateQueries({ queryKey: ['activities'] })
       void queryClient.invalidateQueries({ queryKey: ['posts'] })
+      void queryClient.invalidateQueries({ queryKey: ['admin-users'] })
     },
     onError: (error) => toast.error(parseApiError(error).message),
   })
@@ -259,6 +269,22 @@ export default function Admin() {
                     <Badge variant={member.verified ? 'secondary' : 'outline'}>
                       {member.verified ? 'Vérifié' : 'En attente'}
                     </Badge>
+                    {member.role !== 'ADMIN' && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label={`Supprimer le membre ${member.firstName} ${member.lastName}`}
+                        onClick={() =>
+                          setDeleteTarget({
+                            kind: 'user',
+                            id: member.id,
+                            label: `${member.firstName} ${member.lastName}`,
+                          })
+                        }
+                      >
+                        <Trash2 className="size-4" />
+                      </Button>
+                    )}
                   </div>
                 </div>
               ))}
@@ -288,7 +314,9 @@ export default function Admin() {
         description={
           deleteTarget?.kind === 'activity'
             ? `« ${deleteTarget?.label} » et son image seront définitivement supprimés.`
-            : `Le sujet « ${deleteTarget?.label} » et ses commentaires seront définitivement supprimés.`
+            : deleteTarget?.kind === 'post'
+              ? `Le sujet « ${deleteTarget?.label} » et ses commentaires seront définitivement supprimés.`
+              : `Le membre « ${deleteTarget?.label} » sera définitivement supprimé.`
         }
       />
     </section>
