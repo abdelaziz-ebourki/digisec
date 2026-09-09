@@ -57,7 +57,9 @@ export default function Verify() {
           <CardHeader>
             <CheckCircle2 className="text-amber-400 mx-auto size-12" />
             <CardTitle className="mt-2 text-2xl">Compte vérifié !</CardTitle>
-            <CardDescription>{verification.data.message}</CardDescription>
+            <CardDescription>
+              Votre compte a été vérifié. Vous pouvez maintenant vous connecter.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Button asChild className="w-full">

@@ -4,6 +4,7 @@ import com.digisec.dto.AdminUserResponse;
 import com.digisec.entity.Role;
 import com.digisec.entity.User;
 import com.digisec.exception.ConflictException;
+import com.digisec.exception.ErrorCode;
 import com.digisec.exception.ResourceNotFoundException;
 import com.digisec.repository.CommentRepository;
 import com.digisec.repository.PostRepository;
@@ -14,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.access.AccessDeniedException;
+import com.digisec.exception.ForbiddenException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -132,7 +133,8 @@ class AdminServiceTest {
         when(userRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> adminService.deleteUser(99L, "admin@digisec.local"))
-                .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasFieldOrPropertyWithValue("code", ErrorCode.USER_NOT_FOUND);
         verify(userRepository, never()).delete(org.mockito.ArgumentMatchers.any());
     }
 
@@ -142,7 +144,8 @@ class AdminServiceTest {
         when(userRepository.findById(9L)).thenReturn(Optional.of(admin));
 
         assertThatThrownBy(() -> adminService.deleteUser(9L, "admin@digisec.local"))
-                .isInstanceOf(AccessDeniedException.class);
+                .isInstanceOf(ForbiddenException.class)
+                .hasFieldOrPropertyWithValue("code", ErrorCode.CANNOT_DELETE_SELF);
         verify(userRepository, never()).delete(org.mockito.ArgumentMatchers.any());
     }
 
@@ -152,7 +155,8 @@ class AdminServiceTest {
         when(userRepository.findById(10L)).thenReturn(Optional.of(otherAdmin));
 
         assertThatThrownBy(() -> adminService.deleteUser(10L, "admin@digisec.local"))
-                .isInstanceOf(AccessDeniedException.class);
+                .isInstanceOf(ForbiddenException.class)
+                .hasFieldOrPropertyWithValue("code", ErrorCode.CANNOT_DELETE_ADMIN);
         verify(userRepository, never()).delete(org.mockito.ArgumentMatchers.any());
     }
 
@@ -163,7 +167,8 @@ class AdminServiceTest {
         when(postRepository.existsByAuthorId(7L)).thenReturn(true);
 
         assertThatThrownBy(() -> adminService.deleteUser(7L, "admin@digisec.local"))
-                .isInstanceOf(ConflictException.class);
+                .isInstanceOf(ConflictException.class)
+                .hasFieldOrPropertyWithValue("code", ErrorCode.USER_HAS_CONTENT);
         verify(userRepository, never()).delete(org.mockito.ArgumentMatchers.any());
     }
 
@@ -175,7 +180,8 @@ class AdminServiceTest {
         when(commentRepository.existsByAuthorId(7L)).thenReturn(true);
 
         assertThatThrownBy(() -> adminService.deleteUser(7L, "admin@digisec.local"))
-                .isInstanceOf(ConflictException.class);
+                .isInstanceOf(ConflictException.class)
+                .hasFieldOrPropertyWithValue("code", ErrorCode.USER_HAS_CONTENT);
         verify(userRepository, never()).delete(org.mockito.ArgumentMatchers.any());
     }
 }

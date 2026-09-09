@@ -8,6 +8,7 @@ import com.digisec.entity.Role;
 import com.digisec.entity.User;
 import com.digisec.entity.VerificationToken;
 import com.digisec.exception.AccountNotVerifiedException;
+import com.digisec.exception.ErrorCode;
 import com.digisec.exception.DuplicateResourceException;
 import com.digisec.exception.InvalidVerificationTokenException;
 import com.digisec.exception.UnauthorizedException;
@@ -139,7 +140,7 @@ class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.register(registerRequest()))
                 .isInstanceOf(DuplicateResourceException.class)
-                .hasMessageContaining("email");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.EMAIL_ALREADY_EXISTS);
 
         verify(userRepository, never()).save(any());
     }
@@ -151,7 +152,7 @@ class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.register(registerRequest()))
                 .isInstanceOf(DuplicateResourceException.class)
-                .hasMessageContaining("code apogée");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.CODE_APOGEE_ALREADY_EXISTS);
     }
 
     @Test
@@ -162,7 +163,7 @@ class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.register(registerRequest()))
                 .isInstanceOf(DuplicateResourceException.class)
-                .hasMessageContaining("phone number");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.PHONE_ALREADY_EXISTS);
     }
 
     @Test
@@ -196,7 +197,7 @@ class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.verify(rawToken))
                 .isInstanceOf(InvalidVerificationTokenException.class)
-                .hasMessageContaining("expired");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.VERIFICATION_LINK_EXPIRED);
 
         verify(tokenRepository).delete(expired);
         verify(userRepository, never()).save(any());
@@ -232,7 +233,7 @@ class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.login(new LoginRequest("ayoub@digisec.local", "password123")))
                 .isInstanceOf(AccountNotVerifiedException.class)
-                .hasMessageContaining("verify");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.EMAIL_NOT_VERIFIED);
 
         verify(authenticationManager, never()).authenticate(any());
     }
@@ -243,7 +244,7 @@ class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.login(new LoginRequest("ghost@digisec.local", "password123")))
                 .isInstanceOf(UnauthorizedException.class)
-                .hasMessageContaining("Invalid email or password");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.INVALID_CREDENTIALS);
     }
 
     @Test
@@ -254,6 +255,6 @@ class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.login(new LoginRequest("ayoub@digisec.local", "wrong")))
                 .isInstanceOf(UnauthorizedException.class)
-                .hasMessageContaining("Invalid email or password");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.INVALID_CREDENTIALS);
     }
 }

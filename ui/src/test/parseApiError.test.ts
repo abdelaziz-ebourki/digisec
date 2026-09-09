@@ -14,9 +14,45 @@ function axiosErrorWith(status: number, data: unknown): AxiosError {
 }
 
 describe('parseApiError', () => {
-  it('extracts ProblemDetail fields', () => {
-    const error = parseApiError(axiosErrorWith(409, { detail: 'An account with this email already exists' }))
+  it('resolves the French message from the backend error code', () => {
+    const error = parseApiError(
+      axiosErrorWith(409, {
+        code: 'EMAIL_ALREADY_EXISTS',
+        detail: 'An account with this email already exists',
+      }),
+    )
     expect(error).toMatchObject({ status: 409, message: 'Un compte existe déjà avec cet e-mail' })
+  })
+
+  it.each([
+    ['INVALID_CREDENTIALS', 'E-mail ou mot de passe invalide'],
+    ['EMAIL_NOT_VERIFIED', 'Veuillez vérifier votre adresse e-mail avant de vous connecter'],
+    ['INVALID_IMAGE_TYPE', 'Seules les images JPEG, PNG et WebP sont acceptées'],
+    ['PHONE_ALREADY_EXISTS', 'Un compte existe déjà avec ce numéro de téléphone'],
+    ['VERIFICATION_LINK_EXPIRED', 'Ce lien de vérification a expiré. Veuillez vous réinscrire.'],
+    ['TITLE_REQUIRED', 'Le titre est requis'],
+    ['ACTIVITY_DATE_REQUIRED', "La date de l'activité est requise"],
+    ['MESSAGE_TOO_LONG', 'Le message est trop long'],
+    ['DELETE_NOT_ALLOWED', 'Vous n’êtes pas autorisé à supprimer cette ressource'],
+    ['CANNOT_DELETE_SELF', 'Vous ne pouvez pas supprimer votre propre compte'],
+    ['USER_HAS_CONTENT', 'Ce membre a des sujets ou commentaires et ne peut pas être supprimé'],
+    ['USER_NOT_FOUND', 'Utilisateur introuvable'],
+    ['FORBIDDEN', 'Accès interdit'],
+  ])('translates the backend code %s to French', (code, french) => {
+    const error = parseApiError(axiosErrorWith(400, { code, detail: 'Some English detail' }))
+    expect(error.message).toBe(french)
+  })
+
+  it('falls back to a generic French message for unknown codes', () => {
+    const error = parseApiError(
+      axiosErrorWith(400, { code: 'SOME_FUTURE_CODE', detail: 'Some future English detail' }),
+    )
+    expect(error.message).toBe('Une erreur est survenue')
+  })
+
+  it('falls back to the detail when no code is present', () => {
+    const error = parseApiError(axiosErrorWith(500, { detail: 'Something without a code' }))
+    expect(error.message).toBe('Something without a code')
   })
 
   it('falls back to the title when detail is missing', () => {
@@ -28,17 +64,17 @@ describe('parseApiError', () => {
     const error = parseApiError(
       axiosErrorWith(400, { detail: 'Validation failed', errors: { email: 'Email must be valid' } }),
     )
-    expect(error.fieldErrors).toEqual({ email: 'Email must be valid' })
+    expect(error.fieldErrors).toEqual({ email: "L'e-mail doit être valide" })
   })
 
-  it('translates field error values to French', () => {
+  it('translates validation field error values to French', () => {
     const error = parseApiError(
-      axiosErrorWith(409, {
-        detail: 'Duplicate',
-        errors: { email: 'An account with this email already exists' },
+      axiosErrorWith(400, {
+        detail: 'Validation failed',
+        errors: { phoneNumber: 'Phone number must be valid' },
       }),
     )
-    expect(error.fieldErrors).toEqual({ email: 'Un compte existe déjà avec cet e-mail' })
+    expect(error.fieldErrors).toEqual({ phoneNumber: 'Le numéro de téléphone doit être valide' })
   })
 
   it('normalizes network failures without a response', () => {
@@ -53,43 +89,5 @@ describe('parseApiError', () => {
       status: 0,
       message: 'Une erreur inattendue est survenue',
     })
-  })
-
-  it.each([
-    ['Invalid email or password', 'E-mail ou mot de passe invalide'],
-    [
-      'Please verify your email address before logging in',
-      'Veuillez vérifier votre adresse e-mail avant de vous connecter',
-    ],
-    [
-      'Only JPEG, PNG and WebP images are allowed',
-      'Seules les images JPEG, PNG et WebP sont acceptées',
-    ],
-    [
-      'An account with this phone number already exists',
-      'Un compte existe déjà avec ce numéro de téléphone',
-    ],
-    [
-      'This verification link has expired. Please register again.',
-      'Ce lien de vérification a expiré. Veuillez vous réinscrire.',
-    ],
-    ['Title is required', 'Le titre est requis'],
-    ["Activity date is required", "La date de l'activité est requise"],
-    ['Message must not exceed 2000 characters', 'Le message est trop long'],
-    ['You are not allowed to delete this resource', 'Vous n’êtes pas autorisé à supprimer cette ressource'],
-    ['You cannot delete your own account', 'Vous ne pouvez pas supprimer votre propre compte'],
-    [
-      'User has posts or comments and cannot be deleted',
-      'Ce membre a des sujets ou commentaires et ne peut pas être supprimé',
-    ],
-    ['User not found: 42', 'Utilisateur introuvable'],
-  ])('translates the backend message %s to French', (backend, french) => {
-    const error = parseApiError(axiosErrorWith(400, { detail: backend }))
-    expect(error.message).toBe(french)
-  })
-
-  it('passes unmapped messages through untouched', () => {
-    const error = parseApiError(axiosErrorWith(500, { detail: 'Something brand new' }))
-    expect(error.message).toBe('Something brand new')
   })
 })

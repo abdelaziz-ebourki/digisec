@@ -3,6 +3,7 @@ package com.digisec.service;
 import com.digisec.dto.ActivityResponse;
 import com.digisec.entity.Activity;
 import com.digisec.exception.InvalidFileException;
+import com.digisec.exception.ErrorCode;
 import com.digisec.exception.ResourceNotFoundException;
 import com.digisec.repository.ActivityRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -89,21 +90,21 @@ class ActivityServiceTest {
     void rejectsBlankTitle() {
         assertThatThrownBy(() -> activityService.create(" ", LocalDate.now(), "msg", null))
                 .isInstanceOf(InvalidFileException.class)
-                .hasMessageContaining("Title");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.TITLE_REQUIRED);
     }
 
     @Test
     void rejectsMissingDate() {
         assertThatThrownBy(() -> activityService.create("Title", null, "msg", null))
                 .isInstanceOf(InvalidFileException.class)
-                .hasMessageContaining("date");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.ACTIVITY_DATE_REQUIRED);
     }
 
     @Test
     void rejectsBlankMessage() {
         assertThatThrownBy(() -> activityService.create("Title", LocalDate.now(), "", null))
                 .isInstanceOf(InvalidFileException.class)
-                .hasMessageContaining("Message");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.MESSAGE_REQUIRED);
     }
 
     @Test
@@ -142,7 +143,7 @@ class ActivityServiceTest {
 
         assertThatThrownBy(() -> activityService.loadImage(1L))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("no image");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.ACTIVITY_HAS_NO_IMAGE);
     }
 
     @Test
@@ -201,13 +202,13 @@ class ActivityServiceTest {
         assertThatThrownBy(() -> activityService.update(
                 99L, "T", LocalDate.now(), "m", null, false))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("99");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.ACTIVITY_NOT_FOUND);
     }
 
     @Test
     void updateRejectsBlankTitle() {
         assertThatThrownBy(() -> activityService.update(1L, " ", LocalDate.now(), "m", null, false))
                 .isInstanceOf(InvalidFileException.class)
-                .hasMessageContaining("Title");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.TITLE_REQUIRED);
     }
 }

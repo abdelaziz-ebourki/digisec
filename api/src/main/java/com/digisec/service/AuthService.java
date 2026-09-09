@@ -9,6 +9,7 @@ import com.digisec.entity.Role;
 import com.digisec.entity.User;
 import com.digisec.entity.VerificationToken;
 import com.digisec.exception.AccountNotVerifiedException;
+import com.digisec.exception.ErrorCode;
 import com.digisec.exception.DuplicateResourceException;
 import com.digisec.exception.InvalidVerificationTokenException;
 import com.digisec.exception.ResourceNotFoundException;
@@ -60,13 +61,13 @@ public class AuthService {
     @Transactional
     public MessageResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) {
-            throw new DuplicateResourceException("An account with this email already exists");
+            throw new DuplicateResourceException(ErrorCode.EMAIL_ALREADY_EXISTS, "An account with this email already exists");
         }
         if (userRepository.existsByCodeApoge(request.codeApoge())) {
-            throw new DuplicateResourceException("An account with this code apogée already exists");
+            throw new DuplicateResourceException(ErrorCode.CODE_APOGEE_ALREADY_EXISTS, "An account with this code apogée already exists");
         }
         if (userRepository.existsByPhoneNumber(request.phoneNumber())) {
-            throw new DuplicateResourceException("An account with this phone number already exists");
+            throw new DuplicateResourceException(ErrorCode.PHONE_ALREADY_EXISTS, "An account with this phone number already exists");
         }
 
         User user = User.builder()
@@ -96,11 +97,11 @@ public class AuthService {
     @Transactional
     public MessageResponse verify(String rawToken) {
         VerificationToken token = tokenRepository.findByToken(hash(rawToken))
-                .orElseThrow(() -> new InvalidVerificationTokenException("Invalid or expired verification link"));
+                .orElseThrow(() -> new InvalidVerificationTokenException(ErrorCode.INVALID_VERIFICATION_LINK, "Invalid or expired verification link"));
 
         if (token.isExpired()) {
             tokenRepository.delete(token);
-            throw new InvalidVerificationTokenException("This verification link has expired. Please register again.");
+            throw new InvalidVerificationTokenException(ErrorCode.VERIFICATION_LINK_EXPIRED, "This verification link has expired. Please register again.");
         }
 
         User user = token.getUser();
@@ -113,10 +114,10 @@ public class AuthService {
     @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.email().toLowerCase())
-                .orElseThrow(() -> new UnauthorizedException("Invalid email or password"));
+                .orElseThrow(() -> new UnauthorizedException(ErrorCode.INVALID_CREDENTIALS, "Invalid email or password"));
 
         if (!user.isVerified()) {
-            throw new AccountNotVerifiedException("Please verify your email address before logging in");
+            throw new AccountNotVerifiedException(ErrorCode.EMAIL_NOT_VERIFIED, "Please verify your email address before logging in");
         }
 
         try {
@@ -124,7 +125,7 @@ public class AuthService {
                     new UsernamePasswordAuthenticationToken(
                             request.email().toLowerCase(), request.password()));
         } catch (AuthenticationException e) {
-            throw new UnauthorizedException("Invalid email or password");
+            throw new UnauthorizedException(ErrorCode.INVALID_CREDENTIALS, "Invalid email or password");
         }
 
         String accessToken = jwtService.generate(user.getEmail(), user.getRole().name());
@@ -135,7 +136,7 @@ public class AuthService {
     public UserResponse currentUser(String email) {
         return userRepository.findByEmail(email)
                 .map(AuthService::toUserResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "User not found"));
     }
 
     private static UserResponse toUserResponse(User user) {

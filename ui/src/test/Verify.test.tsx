@@ -45,12 +45,18 @@ describe('Verify page', () => {
   it('shows the API error for an expired or unknown token', async () => {
     mockedVerify.mockRejectedValue({
       isAxiosError: true,
-      response: { status: 400, data: { detail: 'This verification link has expired.' } },
+      response: {
+        status: 400,
+        data: {
+          code: 'VERIFICATION_LINK_EXPIRED',
+          detail: 'This verification link has expired. Please register again.',
+        },
+      },
     })
 
     renderAt('/verify?token=expired')
 
     expect(await screen.findByText('Vérification impossible')).toBeInTheDocument()
-    expect(screen.getByText(/link has expired/i)).toBeInTheDocument()
+    expect(screen.getByText(/ce lien de vérification a expiré/i)).toBeInTheDocument()
   })
 })

@@ -53,7 +53,10 @@ describe('Login page', () => {
   it('shows the API error message on failure', async () => {
     mockLogin.mockRejectedValue({
       isAxiosError: true,
-      response: { status: 401, data: { detail: 'Invalid email or password' } },
+      response: {
+        status: 401,
+        data: { code: 'INVALID_CREDENTIALS', detail: 'Invalid email or password' },
+      },
     })
     const user = userEvent.setup({ delay: null })
     renderLogin()

@@ -2,6 +2,7 @@ package com.digisec.service;
 
 import com.digisec.dto.ActivityResponse;
 import com.digisec.entity.Activity;
+import com.digisec.exception.ErrorCode;
 import com.digisec.exception.InvalidFileException;
 import com.digisec.exception.ResourceNotFoundException;
 import com.digisec.repository.ActivityRepository;
@@ -40,16 +41,16 @@ public class ActivityService {
     @Transactional
     public ActivityResponse create(String title, LocalDate activityDate, String message, MultipartFile image) {
         if (title == null || title.isBlank()) {
-            throw new InvalidFileException("Title is required");
+            throw new InvalidFileException(ErrorCode.TITLE_REQUIRED, "Title is required");
         }
         if (activityDate == null) {
-            throw new InvalidFileException("Activity date is required");
+            throw new InvalidFileException(ErrorCode.ACTIVITY_DATE_REQUIRED, "Activity date is required");
         }
         if (message == null || message.isBlank()) {
-            throw new InvalidFileException("Message is required");
+            throw new InvalidFileException(ErrorCode.MESSAGE_REQUIRED, "Message is required");
         }
         if (message.length() > MAX_MESSAGE_LENGTH) {
-            throw new InvalidFileException("Message must not exceed " + MAX_MESSAGE_LENGTH + " characters");
+            throw new InvalidFileException(ErrorCode.MESSAGE_TOO_LONG, "Message must not exceed " + MAX_MESSAGE_LENGTH + " characters");
         }
         String imagePath = image != null && !image.isEmpty() ? storageService.store(image) : null;
 
@@ -75,16 +76,16 @@ public class ActivityService {
     public ActivityResponse update(Long id, String title, LocalDate activityDate, String message,
                                    MultipartFile image, boolean removeImage) {
         if (title == null || title.isBlank()) {
-            throw new InvalidFileException("Title is required");
+            throw new InvalidFileException(ErrorCode.TITLE_REQUIRED, "Title is required");
         }
         if (activityDate == null) {
-            throw new InvalidFileException("Activity date is required");
+            throw new InvalidFileException(ErrorCode.ACTIVITY_DATE_REQUIRED, "Activity date is required");
         }
         if (message == null || message.isBlank()) {
-            throw new InvalidFileException("Message is required");
+            throw new InvalidFileException(ErrorCode.MESSAGE_REQUIRED, "Message is required");
         }
         if (message.length() > MAX_MESSAGE_LENGTH) {
-            throw new InvalidFileException("Message must not exceed " + MAX_MESSAGE_LENGTH + " characters");
+            throw new InvalidFileException(ErrorCode.MESSAGE_TOO_LONG, "Message must not exceed " + MAX_MESSAGE_LENGTH + " characters");
         }
         Activity activity = findActivity(id);
         activity.setTitle(title.trim());
@@ -108,14 +109,14 @@ public class ActivityService {
     public StoredFile loadImage(Long id) {
         Activity activity = findActivity(id);
         if (activity.getImagePath() == null) {
-            throw new ResourceNotFoundException("Activity has no image");
+            throw new ResourceNotFoundException(ErrorCode.ACTIVITY_HAS_NO_IMAGE, "Activity has no image");
         }
         return storageService.load(activity.getImagePath());
     }
 
     private Activity findActivity(Long id) {
         return activityRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Activity not found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ACTIVITY_NOT_FOUND, "Activity not found: " + id));
     }
 
     private static ActivityResponse toResponse(Activity activity) {

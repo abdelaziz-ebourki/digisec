@@ -6,6 +6,7 @@ import com.digisec.entity.Post;
 import com.digisec.entity.Role;
 import com.digisec.entity.User;
 import com.digisec.exception.ResourceNotFoundException;
+import com.digisec.exception.ErrorCode;
 import com.digisec.repository.PostRepository;
 import com.digisec.security.CurrentUserProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
+import com.digisec.exception.ForbiddenException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -119,7 +120,7 @@ class PostServiceTest {
 
         assertThatThrownBy(() -> postService.get(99L))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("Post not found");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.POST_NOT_FOUND);
     }
 
     @Test
@@ -148,8 +149,8 @@ class PostServiceTest {
         when(currentUserProvider.getUser("stranger@digisec.local")).thenReturn(stranger);
 
         assertThatThrownBy(() -> postService.delete(10L, "stranger@digisec.local"))
-                .isInstanceOf(AccessDeniedException.class)
-                .hasMessageContaining("not allowed");
+                .isInstanceOf(ForbiddenException.class)
+                .hasFieldOrPropertyWithValue("code", ErrorCode.DELETE_NOT_ALLOWED);
 
         verify(postRepository, org.mockito.Mockito.never()).delete(any());
     }
@@ -187,8 +188,8 @@ class PostServiceTest {
 
         assertThatThrownBy(() -> postService.update(
                 10L, new PostRequest("Hijack", "Hijacked"), "stranger@digisec.local"))
-                .isInstanceOf(AccessDeniedException.class)
-                .hasMessageContaining("not allowed");
+                .isInstanceOf(ForbiddenException.class)
+                .hasFieldOrPropertyWithValue("code", ErrorCode.DELETE_NOT_ALLOWED);
 
         verify(postRepository, org.mockito.Mockito.never()).save(any());
     }
@@ -200,6 +201,6 @@ class PostServiceTest {
         assertThatThrownBy(() -> postService.update(
                 99L, new PostRequest("T", "C"), "admin@digisec.local"))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("Post not found");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.POST_NOT_FOUND);
     }
 }

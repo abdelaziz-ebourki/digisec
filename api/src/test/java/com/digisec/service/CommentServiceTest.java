@@ -7,6 +7,7 @@ import com.digisec.entity.Post;
 import com.digisec.entity.Role;
 import com.digisec.entity.User;
 import com.digisec.exception.ResourceNotFoundException;
+import com.digisec.exception.ErrorCode;
 import com.digisec.repository.CommentRepository;
 import com.digisec.repository.PostRepository;
 import com.digisec.security.CurrentUserProvider;
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.access.AccessDeniedException;
+import com.digisec.exception.ForbiddenException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -119,7 +120,8 @@ class CommentServiceTest {
         when(currentUserProvider.getUser("s@digisec.local")).thenReturn(stranger);
 
         assertThatThrownBy(() -> commentService.delete(20L, "s@digisec.local"))
-                .isInstanceOf(AccessDeniedException.class);
+                .isInstanceOf(ForbiddenException.class)
+                .hasFieldOrPropertyWithValue("code", ErrorCode.DELETE_NOT_ALLOWED);
 
         verify(commentRepository, never()).delete(any());
     }

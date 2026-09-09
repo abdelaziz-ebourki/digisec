@@ -10,7 +10,8 @@ import com.digisec.exception.ResourceNotFoundException;
 import com.digisec.repository.CommentRepository;
 import com.digisec.repository.PostRepository;
 import com.digisec.security.CurrentUserProvider;
-import org.springframework.security.access.AccessDeniedException;
+import com.digisec.exception.ErrorCode;
+import com.digisec.exception.ForbiddenException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +55,7 @@ public class CommentService {
     @Transactional
     public void delete(Long commentId, String requesterEmail) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment not found: " + commentId));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.COMMENT_NOT_FOUND, "Comment not found: " + commentId));
         requireOwnerOrAdmin(comment.getAuthor(), requesterEmail);
         commentRepository.delete(comment);
     }
@@ -64,13 +65,13 @@ public class CommentService {
         boolean isOwner = author.getId().equals(requester.getId());
         boolean isAdmin = requester.getRole() == Role.ADMIN;
         if (!isOwner && !isAdmin) {
-            throw new AccessDeniedException("You are not allowed to delete this resource");
+            throw new ForbiddenException(ErrorCode.DELETE_NOT_ALLOWED, "You are not allowed to delete this resource");
         }
     }
 
     private Post findPost(Long postId) {
         return postRepository.findById(postId)
-                .orElseThrow(() -> new ResourceNotFoundException("Post not found: " + postId));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.POST_NOT_FOUND, "Post not found: " + postId));
     }
 
     private static CommentResponse toResponse(Comment comment) {

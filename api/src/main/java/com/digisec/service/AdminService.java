@@ -4,12 +4,13 @@ import com.digisec.dto.AdminUserResponse;
 import com.digisec.entity.Role;
 import com.digisec.entity.User;
 import com.digisec.exception.ConflictException;
+import com.digisec.exception.ErrorCode;
+import com.digisec.exception.ForbiddenException;
 import com.digisec.exception.ResourceNotFoundException;
 import com.digisec.repository.CommentRepository;
 import com.digisec.repository.PostRepository;
 import com.digisec.repository.UserRepository;
 import com.digisec.repository.VerificationTokenRepository;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,15 +44,15 @@ public class AdminService {
     @Transactional
     public void deleteUser(Long id, String currentUserEmail) {
         User target = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "User not found: " + id));
         if (target.getEmail().equals(currentUserEmail)) {
-            throw new AccessDeniedException("You cannot delete your own account");
+            throw new ForbiddenException(ErrorCode.CANNOT_DELETE_SELF, "You cannot delete your own account");
         }
         if (target.getRole() == Role.ADMIN) {
-            throw new AccessDeniedException("Administrators cannot be deleted");
+            throw new ForbiddenException(ErrorCode.CANNOT_DELETE_ADMIN, "Administrators cannot be deleted");
         }
         if (postRepository.existsByAuthorId(id) || commentRepository.existsByAuthorId(id)) {
-            throw new ConflictException("User has posts or comments and cannot be deleted");
+            throw new ConflictException(ErrorCode.USER_HAS_CONTENT, "User has posts or comments and cannot be deleted");
         }
         verificationTokenRepository.deleteAll(verificationTokenRepository.findByUserId(id));
         userRepository.delete(target);

@@ -1,5 +1,6 @@
 package com.digisec.service;
 
+import com.digisec.exception.ErrorCode;
 import com.digisec.exception.InvalidFileException;
 import com.digisec.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +38,7 @@ public class LocalFileStorageService implements StorageService {
             String storedName = UUID.randomUUID() + extension;
             Path target = root.resolve(storedName).normalize();
             if (!target.startsWith(root)) {
-                throw new InvalidFileException("Invalid file path");
+                throw new InvalidFileException(ErrorCode.INVALID_FILE_PATH, "Invalid file path");
             }
             try (var in = file.getInputStream()) {
                 Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
@@ -52,7 +53,7 @@ public class LocalFileStorageService implements StorageService {
     public StoredFile load(String storedName) {
         Path path = resolveSafely(storedName);
         if (!Files.exists(path)) {
-            throw new ResourceNotFoundException("Image not found");
+            throw new ResourceNotFoundException(ErrorCode.IMAGE_NOT_FOUND, "Image not found");
         }
         Resource resource = new FileSystemResource(path);
         return new StoredFile(resource, probeContentType(path));
@@ -69,18 +70,18 @@ public class LocalFileStorageService implements StorageService {
 
     private void validate(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new InvalidFileException("File is required");
+            throw new InvalidFileException(ErrorCode.FILE_REQUIRED, "File is required");
         }
         String contentType = file.getContentType();
         if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType.toLowerCase())) {
-            throw new InvalidFileException("Only JPEG, PNG and WebP images are allowed");
+            throw new InvalidFileException(ErrorCode.INVALID_IMAGE_TYPE, "Only JPEG, PNG and WebP images are allowed");
         }
     }
 
     private Path resolveSafely(String storedName) {
         Path path = root.resolve(storedName).normalize();
         if (!path.startsWith(root)) {
-            throw new InvalidFileException("Invalid file path");
+            throw new InvalidFileException(ErrorCode.INVALID_FILE_PATH, "Invalid file path");
         }
         return path;
     }

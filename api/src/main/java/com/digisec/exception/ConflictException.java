@@ -2,7 +2,14 @@ package com.digisec.exception;
 
 public class ConflictException extends RuntimeException {
 
-    public ConflictException(String message) {
+    private final ErrorCode code;
+
+    public ConflictException(ErrorCode code, String message) {
         super(message);
+        this.code = code;
+    }
+
+    public ErrorCode getCode() {
+        return code;
     }
 }

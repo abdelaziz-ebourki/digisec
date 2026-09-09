@@ -1,6 +1,7 @@
 package com.digisec.security;
 
 import com.digisec.entity.User;
+import com.digisec.exception.ErrorCode;
 import com.digisec.exception.UnauthorizedException;
 import com.digisec.repository.UserRepository;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,6 @@ public class CurrentUserProvider {
 
     public User getUser(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UnauthorizedException("Authenticated user no longer exists"));
+                .orElseThrow(() -> new UnauthorizedException(ErrorCode.SESSION_INVALID, "Authenticated user no longer exists"));
     }
 }

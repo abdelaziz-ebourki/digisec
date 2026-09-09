@@ -1,6 +1,7 @@
 package com.digisec.service;
 
 import com.digisec.exception.InvalidFileException;
+import com.digisec.exception.ErrorCode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.mock.web.MockMultipartFile;
@@ -34,7 +35,7 @@ class LocalFileStorageServiceTest {
 
         assertThatThrownBy(() -> storage().store(text))
                 .isInstanceOf(InvalidFileException.class)
-                .hasMessageContaining("JPEG, PNG and WebP");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.INVALID_IMAGE_TYPE);
     }
 
     @Test
@@ -43,7 +44,7 @@ class LocalFileStorageServiceTest {
 
         assertThatThrownBy(() -> storage().store(empty))
                 .isInstanceOf(InvalidFileException.class)
-                .hasMessageContaining("required");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.FILE_REQUIRED);
     }
 
     @Test
@@ -73,6 +74,6 @@ class LocalFileStorageServiceTest {
 
         assertThatThrownBy(() -> storage.load("../outside.txt"))
                 .isInstanceOf(InvalidFileException.class)
-                .hasMessageContaining("Invalid file path");
+                .hasFieldOrPropertyWithValue("code", ErrorCode.INVALID_FILE_PATH);
     }
 }

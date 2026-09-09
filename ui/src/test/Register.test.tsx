@@ -57,8 +57,8 @@ describe('Register page', () => {
     mockRegister.mockRejectedValue({
       isAxiosError: true,
       response: {
-        status: 409,
-        data: { detail: 'Duplicate', errors: { email: 'An account with this email already exists' } },
+        status: 400,
+        data: { detail: 'Validation failed', errors: { email: 'Email must be valid' } },
       },
     })
     const user = userEvent.setup({ delay: null })
@@ -71,7 +71,7 @@ describe('Register page', () => {
     await fillForm(user)
     await user.click(screen.getByRole('button', { name: /créer mon compte/i }))
 
-    expect(await screen.findByText(/un compte existe déjà avec cet e-mail/i)).toBeInTheDocument()
+    expect(await screen.findByText(/l'e-mail doit être valide/i)).toBeInTheDocument()
     expect(screen.queryByText(/vérifiez votre boîte mail/i)).not.toBeInTheDocument()
   })
 

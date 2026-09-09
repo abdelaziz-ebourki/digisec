@@ -12,7 +12,8 @@ import com.digisec.security.CurrentUserProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
+import com.digisec.exception.ErrorCode;
+import com.digisec.exception.ForbiddenException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,13 +74,13 @@ public class PostService {
         boolean isOwner = author.getId().equals(requester.getId());
         boolean isAdmin = requester.getRole() == Role.ADMIN;
         if (!isOwner && !isAdmin) {
-            throw new AccessDeniedException("You are not allowed to delete this resource");
+            throw new ForbiddenException(ErrorCode.DELETE_NOT_ALLOWED, "You are not allowed to delete this resource");
         }
     }
 
     private Post findPost(Long id) {
         return postRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Post not found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.POST_NOT_FOUND, "Post not found: " + id));
     }
 
     private static PostResponse toResponse(Post post) {

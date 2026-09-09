@@ -14,49 +14,61 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static ProblemDetail withCode(HttpStatus status, ErrorCode code, String detail) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(status, detail);
+        problem.setProperty("code", code.name());
+        return problem;
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ProblemDetail handleNotFound(ResourceNotFoundException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        return withCode(HttpStatus.NOT_FOUND, ex.getCode(), ex.getMessage());
     }
 
     @ExceptionHandler(DuplicateResourceException.class)
     public ProblemDetail handleDuplicate(DuplicateResourceException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        return withCode(HttpStatus.CONFLICT, ex.getCode(), ex.getMessage());
     }
 
     @ExceptionHandler(ConflictException.class)
     public ProblemDetail handleConflict(ConflictException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        return withCode(HttpStatus.CONFLICT, ex.getCode(), ex.getMessage());
     }
 
     @ExceptionHandler(InvalidVerificationTokenException.class)
     public ProblemDetail handleInvalidToken(InvalidVerificationTokenException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return withCode(HttpStatus.BAD_REQUEST, ex.getCode(), ex.getMessage());
     }
 
     @ExceptionHandler(InvalidFileException.class)
     public ProblemDetail handleInvalidFile(InvalidFileException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return withCode(HttpStatus.BAD_REQUEST, ex.getCode(), ex.getMessage());
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ProblemDetail handleMaxUpload(MaxUploadSizeExceededException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.PAYLOAD_TOO_LARGE, "File exceeds the maximum allowed size");
+        return withCode(HttpStatus.PAYLOAD_TOO_LARGE, ErrorCode.FILE_TOO_LARGE,
+                "File exceeds the maximum allowed size");
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     public ProblemDetail handleUnauthorized(UnauthorizedException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        return withCode(HttpStatus.UNAUTHORIZED, ex.getCode(), ex.getMessage());
     }
 
     @ExceptionHandler(AccountNotVerifiedException.class)
     public ProblemDetail handleAccountNotVerified(AccountNotVerifiedException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+        return withCode(HttpStatus.FORBIDDEN, ex.getCode(), ex.getMessage());
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ProblemDetail handleForbidden(ForbiddenException ex) {
+        return withCode(HttpStatus.FORBIDDEN, ex.getCode(), ex.getMessage());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ProblemDetail handleAccessDenied(AccessDeniedException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+        return withCode(HttpStatus.FORBIDDEN, ErrorCode.FORBIDDEN, ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

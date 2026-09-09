@@ -1,10 +1,10 @@
 package com.digisec.exception;
 
-public class InvalidVerificationTokenException extends RuntimeException {
+public class ForbiddenException extends RuntimeException {
 
     private final ErrorCode code;
 
-    public InvalidVerificationTokenException(ErrorCode code, String message) {
+    public ForbiddenException(ErrorCode code, String message) {
         super(message);
         this.code = code;
     }
