@@ -60,7 +60,7 @@ Runs on `http://localhost:8080` (`/actuator/health` is public); Swagger UI at `/
 | `SMTP_USERNAME` / `SMTP_PASSWORD` | empty | SMTP credentials |
 | `FRONTEND_URL` | `http://localhost:5173` | Base URL used in verification links |
 | `STORAGE_LOCATION` | `./uploads` | Activity image storage directory |
-| `SEED_ADMIN` / `ADMIN_EMAIL` / `ADMIN_PASSWORD` | `true` / `admin@digisec.local` / `ChangeMe123!` | Dev admin seeding |
+| `SEED_ADMIN` / `ADMIN_EMAIL` / `ADMIN_PASSWORD` | `true` / `admin@digisec.local` / value in your `.env` (prod boots refuse the default) | Dev admin seeding |
 
 ### UI
 

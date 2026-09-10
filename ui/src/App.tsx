@@ -1,19 +1,29 @@
+import { Suspense, lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
+import { LoaderCircle } from 'lucide-react'
 import { Layout } from '@/components/layout/Layout'
 import { AdminRoute, ProtectedRoute } from '@/components/layout/RouteGuards'
-import Home from '@/pages/Home'
-import About from '@/pages/About'
-import Activities from '@/pages/Activities'
-import Admin from '@/pages/Admin'
-import Forum from '@/pages/Forum'
-import Login from '@/pages/Login'
-import Register from '@/pages/Register'
-import Verify from '@/pages/Verify'
-import NotFound from '@/pages/NotFound'
+
+const Home = lazy(() => import('@/pages/Home'))
+const About = lazy(() => import('@/pages/About'))
+const Activities = lazy(() => import('@/pages/Activities'))
+const Admin = lazy(() => import('@/pages/Admin'))
+const Forum = lazy(() => import('@/pages/Forum'))
+const Login = lazy(() => import('@/pages/Login'))
+const Register = lazy(() => import('@/pages/Register'))
+const Verify = lazy(() => import('@/pages/Verify'))
+const NotFound = lazy(() => import('@/pages/NotFound'))
 
 export default function App() {
   return (
-    <Routes>
+    <Suspense
+      fallback={
+        <div className="flex min-h-[50vh] items-center justify-center" role="status">
+          <LoaderCircle className="size-8 animate-spin" aria-hidden />
+        </div>
+      }
+    >
+      <Routes>
       <Route element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="digisec" element={<About />} />
@@ -29,6 +39,7 @@ export default function App() {
         </Route>
         <Route path="*" element={<NotFound />} />
       </Route>
-    </Routes>
+      </Routes>
+    </Suspense>
   )
 }

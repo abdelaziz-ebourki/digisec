@@ -34,7 +34,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
     private final int authPerMinute;
     private final Map<String, Bucket> buckets = new ConcurrentHashMap<>();
 
-    public RateLimitFilter(@Value("${app.rate-limit.auth-per-minute:30}") int authPerMinute) {
+    public RateLimitFilter(@Value("${app.rate-limit.auth-per-minute:60}") int authPerMinute) {
         this.authPerMinute = authPerMinute;
     }
 
