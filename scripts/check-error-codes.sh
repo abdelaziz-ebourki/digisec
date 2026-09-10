@@ -13,13 +13,16 @@ fail() {
   EXIT=1
 }
 
-# 1. ErrorCode enum constants.
+# 1. ErrorCode enum constants (grep may find nothing on a broken tree;
+# never die silently — the explicit checks below report).
 ENUM_CODES=$(grep -oE '^[[:space:]]*[A-Z][A-Z0-9_]+,?[[:space:]]*$' "$ROOT/api/src/main/java/com/digisec/exception/ErrorCode.java" \
-  | grep -oE '[A-Z][A-Z0-9_]+' | sort -u)
+  | grep -oE '[A-Z][A-Z0-9_]+' | sort -u || true)
+[ -n "$ENUM_CODES" ] || fail "no ErrorCode constants found"
 
 # 2. Keys of CODE_TO_FRENCH (top-level Record entries only, before FIELD_ERROR_TRANSLATIONS).
 FRONT_KEYS=$(awk '/CODE_TO_FRENCH.*=.*\{/,/^\}/' "$ROOT/ui/src/services/api.ts" \
-  | grep -oE "^[[:space:]]*[A-Z][A-Z0-9_]+" | grep -oE '[A-Z][A-Z0-9_]+' | sort -u)
+  | grep -oE "^[[:space:]]*[A-Z][A-Z0-9_]+" | grep -oE '[A-Z][A-Z0-9_]+' | sort -u || true)
+[ -n "$FRONT_KEYS" ] || fail "no CODE_TO_FRENCH keys found"
 
 for code in $ENUM_CODES; do
   echo "$FRONT_KEYS" | grep -qx "$code" || fail "ErrorCode.$code has no CODE_TO_FRENCH entry"
@@ -29,9 +32,9 @@ done
 DTO_MESSAGES=$(grep -rhoE 'message = "[^"]+"' "$ROOT/api/src/main/java/com/digisec/dto/" \
   | grep -oE '"[^"]+"' | tr -d '"' | sort -u)
 
-# 4. Keys of FIELD_ERROR_TRANSLATIONS.
+# 4. Keys of FIELD_ERROR_TRANSLATIONS (bare identifiers, like CODE_TO_FRENCH).
 FIELD_KEYS=$(awk '/FIELD_ERROR_TRANSLATIONS.*=.*\{/,/^\}/' "$ROOT/ui/src/services/api.ts" \
-  | grep -oE "^[[:space:]]*'[^']+'" | sed -E "s/^ *'([^']+)'/\1/" | sort -u)
+  | grep -oE "^[[:space:]]*[A-Z][A-Z0-9_]+" | grep -oE '[A-Z][A-Z0-9_]+' | sort -u)
 
 while IFS= read -r message; do
   [ -z "$message" ] && continue

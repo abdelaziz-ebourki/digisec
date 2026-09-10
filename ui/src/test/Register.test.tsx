@@ -58,7 +58,7 @@ describe('Register page', () => {
       isAxiosError: true,
       response: {
         status: 400,
-        data: { detail: 'Validation failed', errors: { email: 'Email must be valid' } },
+        data: { code: 'VALIDATION_FAILED', detail: 'Validation failed', errors: { email: 'EMAIL_INVALID' } },
       },
     })
     const user = userEvent.setup({ delay: null })

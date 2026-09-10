@@ -7,28 +7,28 @@ import jakarta.validation.constraints.Size;
 
 public record RegisterRequest(
 
-        @NotBlank(message = "First name is required")
-        @Size(max = 100, message = "First name must not exceed 100 characters")
+        @NotBlank(message = "FIRST_NAME_REQUIRED")
+        @Size(max = 100, message = "FIRST_NAME_TOO_LONG")
         String firstName,
 
-        @NotBlank(message = "Last name is required")
-        @Size(max = 100, message = "Last name must not exceed 100 characters")
+        @NotBlank(message = "LAST_NAME_REQUIRED")
+        @Size(max = 100, message = "LAST_NAME_TOO_LONG")
         String lastName,
 
-        @NotBlank(message = "Code apogée is required")
-        @Size(max = 20, message = "Code apogée must not exceed 20 characters")
+        @NotBlank(message = "CODE_APOGEE_REQUIRED")
+        @Size(max = 20, message = "CODE_APOGEE_TOO_LONG")
         String codeApoge,
 
-        @NotBlank(message = "Email is required")
-        @Email(message = "Email must be valid")
+        @NotBlank(message = "EMAIL_REQUIRED")
+        @Email(message = "EMAIL_INVALID")
         String email,
 
-        @NotBlank(message = "Phone number is required")
-        @Pattern(regexp = "^\\+?[0-9 .-]{8,30}$", message = "Phone number must be valid")
+        @NotBlank(message = "PHONE_REQUIRED")
+        @Pattern(regexp = "^\\+?[0-9 .-]{8,30}$", message = "PHONE_INVALID")
         String phoneNumber,
 
-        @NotBlank(message = "Password is required")
-        @Size(min = 8, max = 72, message = "Password must be between 8 and 72 characters")
+        @NotBlank(message = "PASSWORD_REQUIRED")
+        @Size(min = 8, max = 72, message = "PASSWORD_LENGTH")
         String password
 ) {
 }

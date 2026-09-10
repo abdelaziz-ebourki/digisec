@@ -33,5 +33,23 @@ public enum ErrorCode {
     CANNOT_DELETE_SELF,
     CANNOT_DELETE_ADMIN,
     USER_HAS_CONTENT,
-    FORBIDDEN
+    FORBIDDEN,
+    // Bean Validation codes (emitted as field-error values, mapped by the
+    // same frontend table; kept here so the enum is the full vocabulary).
+    EMAIL_REQUIRED,
+    EMAIL_INVALID,
+    PASSWORD_REQUIRED,
+    PASSWORD_LENGTH,
+    FIRST_NAME_REQUIRED,
+    FIRST_NAME_TOO_LONG,
+    LAST_NAME_REQUIRED,
+    LAST_NAME_TOO_LONG,
+    CODE_APOGEE_REQUIRED,
+    CODE_APOGEE_TOO_LONG,
+    PHONE_REQUIRED,
+    PHONE_INVALID,
+    TITLE_TOO_LONG,
+    CONTENT_REQUIRED,
+    COMMENT_REQUIRED,
+    VALIDATION_FAILED
 }

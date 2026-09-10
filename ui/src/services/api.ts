@@ -41,31 +41,45 @@ const CODE_TO_FRENCH: Record<string, string> = {
   CANNOT_DELETE_ADMIN: 'Les administrateurs ne peuvent pas être supprimés',
   USER_HAS_CONTENT: 'Ce membre a des sujets ou commentaires et ne peut pas être supprimé',
   FORBIDDEN: 'Accès interdit',
+  EMAIL_REQUIRED: "L'e-mail est requis",
+  EMAIL_INVALID: "L'e-mail doit être valide",
+  PASSWORD_REQUIRED: 'Le mot de passe est requis',
+  PASSWORD_LENGTH: 'Le mot de passe doit comporter entre 8 et 72 caractères',
+  FIRST_NAME_REQUIRED: 'Le prénom est requis',
+  FIRST_NAME_TOO_LONG: 'Le prénom doit comporter 100 caractères au maximum',
+  LAST_NAME_REQUIRED: 'Le nom est requis',
+  LAST_NAME_TOO_LONG: 'Le nom doit comporter 100 caractères au maximum',
+  CODE_APOGEE_REQUIRED: 'Le code apogée est requis',
+  CODE_APOGEE_TOO_LONG: 'Le code apogée doit comporter 20 caractères au maximum',
+  PHONE_REQUIRED: 'Le numéro de téléphone est requis',
+  PHONE_INVALID: 'Le numéro de téléphone doit être valide',
+  TITLE_TOO_LONG: 'Le titre doit comporter 200 caractères au maximum',
+  CONTENT_REQUIRED: 'Le contenu est requis',
+  COMMENT_REQUIRED: 'Le commentaire est requis',
+  VALIDATION_FAILED: 'Veuillez corriger les champs indiqués',
 }
 
 /**
- * Bean Validation messages have no codes (out of scope for the ErrorCode
- * migration); map the known validation strings for field errors.
+ * Bean Validation failures carry codes as field-error values (see the DTO
+ * `message` attributes, which are ErrorCode names by convention).
  */
 const FIELD_ERROR_TRANSLATIONS: Record<string, string> = {
-  'Email must be valid': "L'e-mail doit être valide",
-  'Email is required': "L'e-mail est requis",
-  'Password is required': 'Le mot de passe est requis',
-  'Password must be between 8 and 72 characters':
-    'Le mot de passe doit comporter entre 8 et 72 caractères',
-  'First name is required': 'Le prénom est requis',
-  'First name must not exceed 100 characters': 'Le prénom doit comporter 100 caractères au maximum',
-  'Last name is required': 'Le nom est requis',
-  'Last name must not exceed 100 characters': 'Le nom doit comporter 100 caractères au maximum',
-  'Code apogée is required': 'Le code apogée est requis',
-  'Code apogée must not exceed 20 characters':
-    'Le code apogée doit comporter 20 caractères au maximum',
-  'Phone number is required': 'Le numéro de téléphone est requis',
-  'Phone number must be valid': 'Le numéro de téléphone doit être valide',
-  'Title is required': 'Le titre est requis',
-  'Title must not exceed 200 characters': 'Le titre doit comporter 200 caractères au maximum',
-  'Content is required': 'Le contenu est requis',
-  'Comment text is required': 'Le commentaire est requis',
+  EMAIL_REQUIRED: "L'e-mail est requis",
+  EMAIL_INVALID: "L'e-mail doit être valide",
+  PASSWORD_REQUIRED: 'Le mot de passe est requis',
+  PASSWORD_LENGTH: 'Le mot de passe doit comporter entre 8 et 72 caractères',
+  FIRST_NAME_REQUIRED: 'Le prénom est requis',
+  FIRST_NAME_TOO_LONG: 'Le prénom doit comporter 100 caractères au maximum',
+  LAST_NAME_REQUIRED: 'Le nom est requis',
+  LAST_NAME_TOO_LONG: 'Le nom doit comporter 100 caractères au maximum',
+  CODE_APOGEE_REQUIRED: 'Le code apogée est requis',
+  CODE_APOGEE_TOO_LONG: 'Le code apogée doit comporter 20 caractères au maximum',
+  PHONE_REQUIRED: 'Le numéro de téléphone est requis',
+  PHONE_INVALID: 'Le numéro de téléphone doit être valide',
+  TITLE_REQUIRED: 'Le titre est requis',
+  TITLE_TOO_LONG: 'Le titre doit comporter 200 caractères au maximum',
+  CONTENT_REQUIRED: 'Le contenu est requis',
+  COMMENT_REQUIRED: 'Le commentaire est requis',
 }
 
 function translateFieldError(message: string): string {

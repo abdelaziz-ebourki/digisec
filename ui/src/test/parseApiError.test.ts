@@ -62,7 +62,7 @@ describe('parseApiError', () => {
 
   it('collects field errors from validation payloads', () => {
     const error = parseApiError(
-      axiosErrorWith(400, { detail: 'Validation failed', errors: { email: 'Email must be valid' } }),
+      axiosErrorWith(400, { code: 'VALIDATION_FAILED', detail: 'Validation failed', errors: { email: 'EMAIL_INVALID' } }),
     )
     expect(error.fieldErrors).toEqual({ email: "L'e-mail doit être valide" })
   })
@@ -70,8 +70,9 @@ describe('parseApiError', () => {
   it('translates validation field error values to French', () => {
     const error = parseApiError(
       axiosErrorWith(400, {
+        code: 'VALIDATION_FAILED',
         detail: 'Validation failed',
-        errors: { phoneNumber: 'Phone number must be valid' },
+        errors: { phoneNumber: 'PHONE_INVALID' },
       }),
     )
     expect(error.fieldErrors).toEqual({ phoneNumber: 'Le numéro de téléphone doit être valide' })

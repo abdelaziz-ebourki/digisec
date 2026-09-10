@@ -5,11 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 
 public record LoginRequest(
 
-        @NotBlank(message = "Email is required")
-        @Email(message = "Email must be valid")
+        @NotBlank(message = "EMAIL_REQUIRED")
+        @Email(message = "EMAIL_INVALID")
         String email,
 
-        @NotBlank(message = "Password is required")
+        @NotBlank(message = "PASSWORD_REQUIRED")
         String password
 ) {
 }

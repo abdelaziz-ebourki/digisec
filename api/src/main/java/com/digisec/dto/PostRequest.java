@@ -5,11 +5,11 @@ import jakarta.validation.constraints.Size;
 
 public record PostRequest(
 
-        @NotBlank(message = "Title is required")
-        @Size(max = 200, message = "Title must not exceed 200 characters")
+        @NotBlank(message = "TITLE_REQUIRED")
+        @Size(max = 200, message = "TITLE_TOO_LONG")
         String title,
 
-        @NotBlank(message = "Content is required")
+        @NotBlank(message = "CONTENT_REQUIRED")
         String content
 ) {
 }
