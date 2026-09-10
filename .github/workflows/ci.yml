@@ -71,6 +71,15 @@ jobs:
       - name: Unit tests
         run: npm test
 
+  error-codes:
+    name: Error codes — backend/frontend mapping
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check every backend error identifier has a French mapping
+        run: bash scripts/check-error-codes.sh
+
   a11y:
     name: A11y — axe + contrast
     runs-on: ubuntu-latest
