@@ -38,6 +38,7 @@ describe('parseApiError', () => {
     ['USER_HAS_CONTENT', 'Ce membre a des sujets ou commentaires et ne peut pas être supprimé'],
     ['USER_NOT_FOUND', 'Utilisateur introuvable'],
     ['FORBIDDEN', 'Accès interdit'],
+    ['RATE_LIMITED', 'Trop de tentatives, réessayez dans une minute'],
   ])('translates the backend code %s to French', (code, french) => {
     const error = parseApiError(axiosErrorWith(400, { code, detail: 'Some English detail' }))
     expect(error.message).toBe(french)

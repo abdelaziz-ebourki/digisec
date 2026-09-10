@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { deleteUserByEmail, extractVerificationToken, loginViaApi, registerPayload, verifyViaApi } from './helpers'
+import { ADMIN_EMAIL, ADMIN_PASSWORD, deleteUserByEmail, extractVerificationToken, loginViaApi, registerPayload, verifyViaApi } from './helpers'
 
 test.describe.serial('forum flows', () => {
   test('member creates a post, comments, then deletes it', async ({ page, request }) => {
@@ -51,7 +51,7 @@ test.describe.serial('forum flows', () => {
   })
 
   test('double-clicking publish creates a single post', async ({ page, request }) => {
-    const token = await loginViaApi(request, 'admin@digisec.local', 'ChangeMe123!')
+    const token = await loginViaApi(request, ADMIN_EMAIL, ADMIN_PASSWORD)
     const title = `Sujet E2E doublon ${Date.now()}`
     await page.goto('/forum')
     await page.evaluate((jwt) => localStorage.setItem('digisec.token', jwt), token)

@@ -30,7 +30,7 @@ export default defineConfig({
         JWT_SECRET: 'e2e-run-secret-key-with-at-least-32-bytes!',
         SEED_ADMIN: 'true',
         ADMIN_EMAIL: 'admin@digisec.local',
-        ADMIN_PASSWORD: 'ChangeMe123!',
+        ADMIN_PASSWORD: process.env.ADMIN_PASSWORD ?? 'ChangeMe123!',
       },
     },
     {

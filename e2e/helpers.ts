@@ -78,8 +78,8 @@ export async function createPostViaApi(  request: import('@playwright/test').API
   return (await response.json()).id
 }
 
-const ADMIN_EMAIL = 'admin@digisec.local'
-const ADMIN_PASSWORD = 'ChangeMe123!'
+export const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'admin@digisec.local'
+export const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? 'ChangeMe123!'
 
 /**
  * Delete a content-free user created by a spec (keeps the dev database from

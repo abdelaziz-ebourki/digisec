@@ -2,6 +2,8 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { expect, test } from '@playwright/test'
 import {
+  ADMIN_EMAIL,
+  ADMIN_PASSWORD,
   deleteUserByEmail,
   extractVerificationToken,
   loginViaApi,
@@ -13,7 +15,7 @@ const fixture = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 'fixt
 
 test.describe.serial('admin activities flows', () => {
   test('admin creates an activity with an image then deletes it', async ({ page, request }) => {
-    const token = await loginViaApi(request, 'admin@digisec.local', 'ChangeMe123!')
+    const token = await loginViaApi(request, ADMIN_EMAIL, ADMIN_PASSWORD)
     await page.addInitScript((jwt) => localStorage.setItem('digisec.token', jwt), token)
 
     const title = `Activité E2E ${Date.now()}`
@@ -64,7 +66,7 @@ test.describe.serial('admin activities flows', () => {
   })
 
   test('admin sees the administration dashboard', async ({ page, request }) => {
-    const token = await loginViaApi(request, 'admin@digisec.local', 'ChangeMe123!')
+    const token = await loginViaApi(request, ADMIN_EMAIL, ADMIN_PASSWORD)
     await page.addInitScript((jwt) => localStorage.setItem('digisec.token', jwt), token)
 
     await page.goto('/admin')
@@ -96,7 +98,7 @@ test.describe.serial('admin activities flows', () => {
   })
 
   test('admin edits an activity and a post from the dashboard', async ({ page, request }) => {
-    const token = await loginViaApi(request, 'admin@digisec.local', 'ChangeMe123!')
+    const token = await loginViaApi(request, ADMIN_EMAIL, ADMIN_PASSWORD)
     await page.addInitScript((jwt) => localStorage.setItem('digisec.token', jwt), token)
 
     await page.goto('/admin')
@@ -172,7 +174,7 @@ test.describe.serial('admin activities flows', () => {
     const verificationToken = await extractVerificationToken(email)
     await verifyViaApi(request, verificationToken)
 
-    const token = await loginViaApi(request, 'admin@digisec.local', 'ChangeMe123!')
+    const token = await loginViaApi(request, ADMIN_EMAIL, ADMIN_PASSWORD)
     await page.addInitScript((jwt) => localStorage.setItem('digisec.token', jwt), token)
 
     await page.goto('/admin')

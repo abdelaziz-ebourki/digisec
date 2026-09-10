@@ -41,6 +41,7 @@ const CODE_TO_FRENCH: Record<string, string> = {
   CANNOT_DELETE_ADMIN: 'Les administrateurs ne peuvent pas être supprimés',
   USER_HAS_CONTENT: 'Ce membre a des sujets ou commentaires et ne peut pas être supprimé',
   FORBIDDEN: 'Accès interdit',
+  RATE_LIMITED: 'Trop de tentatives, réessayez dans une minute',
   EMAIL_REQUIRED: "L'e-mail est requis",
   EMAIL_INVALID: "L'e-mail doit être valide",
   PASSWORD_REQUIRED: 'Le mot de passe est requis',

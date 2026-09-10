@@ -9,6 +9,13 @@ ARTIFACTS="$ROOT/e2e/.artifacts"
 API_LOG="$ARTIFACTS/api.log"
 
 # 1. Boot (or rebuild) the full stack.
+# Load .env so specs see the same ADMIN_PASSWORD the containers use.
+if [ -f "$ROOT/.env" ]; then
+  set -a
+  # shellcheck disable=SC1091
+  . "$ROOT/.env"
+  set +a
+fi
 sg docker -c "docker compose -f $ROOT/docker-compose.yml up -d --build" 2>/dev/null \
   || docker compose -f "$ROOT/docker-compose.yml" up -d --build
 

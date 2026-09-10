@@ -25,6 +25,9 @@ e2e/test-results/
 e2e/playwright-report/
 .playwright-cli/
 
+# Local database backups (contain password hashes — never commit)
+backups/
+
 # Logs
 *.log
 
