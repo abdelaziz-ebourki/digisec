@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+.vercel
 
 # Node / UI
 node_modules/
