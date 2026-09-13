@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 import { LoaderCircle } from 'lucide-react'
 import { Layout } from '@/components/layout/Layout'
 import { AdminRoute, ProtectedRoute } from '@/components/layout/RouteGuards'
+import { PrototypeModal } from '@/components/PrototypeModal'
 
 const Home = lazy(() => import('@/pages/Home'))
 const About = lazy(() => import('@/pages/About'))
@@ -40,6 +41,7 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Route>
       </Routes>
+      <PrototypeModal />
     </Suspense>
   )
 }

@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import { MailCheck } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { parseApiError } from '@/services/api'
+import { isMockApi } from '@/mocks/env'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
@@ -65,9 +66,18 @@ export default function Register() {
         <Card className="text-center">
           <CardHeader>
             <MailCheck className="text-amber-400 mx-auto size-12" />
-            <CardTitle className="mt-2 text-2xl">Vérifiez votre boîte mail</CardTitle>
+            <CardTitle className="mt-2 text-2xl">
+              {isMockApi() ? 'Compte activé !' : 'Vérifiez votre boîte mail'}
+            </CardTitle>
             <CardDescription>
-              Un lien de vérification vous a été envoyé. Il expire dans 24 heures.
+              {isMockApi() ? (
+                <>
+                  Démonstration : aucun e-mail n’a été envoyé, votre compte est déjà actif. Vous
+                  pouvez vous connecter.
+                </>
+              ) : (
+                'Un lien de vérification vous a été envoyé. Il expire dans 24 heures.'
+              )}
             </CardDescription>
           </CardHeader>
           <CardContent>

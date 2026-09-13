@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Mail, MapPin, Phone } from 'lucide-react'
+import { isMockApi, requestPrototypeModal } from '@/mocks/env'
 
 export function Footer() {
   return (
@@ -50,6 +51,15 @@ export function Footer() {
             <Link to="/forum" className="hover:text-foreground">
               Forum
             </Link>
+            {isMockApi() && (
+              <button
+                type="button"
+                onClick={requestPrototypeModal}
+                className="hover:text-foreground md:self-end"
+              >
+                À propos de cette démo
+              </button>
+            )}
           </nav>
         </div>
       </div>

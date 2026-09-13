@@ -16,15 +16,26 @@ const queryClient = new QueryClient({
   },
 })
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
-      </BrowserRouter>
-      <Toaster richColors position="top-center" />
-    </QueryClientProvider>
-  </StrictMode>,
-)
+async function enableMockApi() {
+  // Opt-in prototype mode (Vercel demo): intercept /api/v1 in the browser.
+  // Any other build (Docker, CI, real-backend hosting) skips this entirely.
+  // Dynamic import keeps MSW out of non-mock bundles.
+  if (import.meta.env.VITE_MOCK_API !== 'true') return
+  const { worker } = await import('./mocks/browser')
+  await worker.start({ onUnhandledRequest: 'bypass' })
+}
+
+enableMockApi().then(() => {
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </BrowserRouter>
+        <Toaster richColors position="top-center" />
+      </QueryClientProvider>
+    </StrictMode>,
+  )
+})

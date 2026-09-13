@@ -4,6 +4,8 @@ import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useAuth } from '@/context/AuthContext'
 import { parseApiError } from '@/services/api'
+import { DEMO_ADMIN_EMAIL, DEMO_ADMIN_PASSWORD } from '@/mocks/db'
+import { isMockApi } from '@/mocks/env'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
@@ -101,6 +103,12 @@ export default function Login() {
               Inscrivez-vous
             </Link>
           </p>
+          {isMockApi() && (
+            <p className="mt-2 text-center text-xs text-muted-foreground">
+              Démo : admin de test <span className="font-medium">{DEMO_ADMIN_EMAIL}</span> /{' '}
+              <span className="font-medium">{DEMO_ADMIN_PASSWORD}</span>
+            </p>
+          )}
         </CardContent>
       </Card>
     </section>

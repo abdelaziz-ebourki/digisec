@@ -88,4 +88,20 @@ docker compose up --build -d   # http://localhost (prod-like)
 # or: cd api && ./mvnw spring-boot:run & cd ui && npm run dev   # http://localhost:5173
 ```
 
+### Prototype (frontend-only demo, e.g. Vercel)
+
+The backend isn't hosted yet, so the demo ships the UI with an MSW worker
+(`ui/src/mocks/`) that simulates the full API in the browser — stateful seed,
+auth, validation errors, French messages — persisted to localStorage:
+
+```bash
+cd ui
+VITE_MOCK_API=true npm run build   # or set VITE_MOCK_API=true in Vercel
+```
+
+Vercel settings: root `ui/`, build `npm run build`, output `dist`
+(`ui/vercel.json` holds the SPA rewrite). Never set `VITE_MOCK_API` in
+Docker/CI — it would hijack the real backend. Demo admin:
+`admin@digisec.local` / `DemoAdmin123!`.
+
 Legacy PHP (`public/`) was removed in `v1.0.0` — recoverable at tag `legacy` and in history (`main` pre-merge).
