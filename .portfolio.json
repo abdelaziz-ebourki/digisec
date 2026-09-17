@@ -1,0 +1,27 @@
+{
+  "slug": "digisec",
+  "name": { "en": "DIGISEC" },
+  "tagline": { "en": "Club web platform — activities, forum, auth and admin." },
+  "status": "shipped",
+  "role": "solo",
+  "kind": "academic",
+  "period": { "start": "2026-08", "end": "2026-09" },
+  "stack": ["Java 25", "Spring Boot 4.1", "React 19", "TypeScript", "Vite", "Tailwind CSS", "MariaDB 11", "Docker"],
+  "repos": [{ "label": "monorepo", "url": "https://github.com/abdelaziz-ebourki/digisec" }],
+  "links": { "demo": "https://ui-nu-coral.vercel.app" },
+  "highlights": {
+    "en": [
+      "JWT auth with email verification and role-based access",
+      "Activities CRUD with image uploads plus forum threads and replies",
+      "Admin moderation, French validation messages and accessible UI",
+      "Docker prod stack plus MSW-powered Vercel demo with seeded data"
+    ]
+  },
+  "cover": {
+    "path": "docs/cover.png",
+    "alt": { "en": "DIGISEC homepage" },
+    "kind": "image"
+  },
+  "featured": true,
+  "displayOrder": 0
+}

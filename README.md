@@ -1,6 +1,35 @@
 # DIGISEC
 
+[![Java](https://img.shields.io/badge/Java-25-orange?logo=openjdk&logoColor=white)](https://openjdk.org/)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.1-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![MariaDB](https://img.shields.io/badge/MariaDB-11-4169E1?logo=mariadb&logoColor=white)](https://mariadb.org/)
+[![Docker](https://img.shields.io/badge/Docker-compose-2496ED?logo=docker&logoColor=white)](./docker-compose.yml)
+[![Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://ui-nu-coral.vercel.app)
+
 Club web application — monorepo containing the React frontend (`ui/`) and the Spring Boot REST API (`api/`).
+
+**Live demo:** https://ui-nu-coral.vercel.app (frontend-only prototype with MSW mock API; demo admin `admin@digisec.local` / `DemoAdmin123!`)
+
+![DIGISEC homepage](docs/cover.png)
+
+## Features
+
+- JWT auth with email verification and role-based access (admin/member)
+- Activities CRUD with image uploads
+- Forum threads and replies
+- Admin moderation dashboard
+- French-first UI with validation messages
+- Docker prod stack (`db` + `api` + `web`) and MSW-powered Vercel demo
+
+## Tech stack
+
+| Layer | Technology |
+| --- | --- |
+| Backend | Java 25, Spring Boot 4.1, Flyway, Spring Security (JWT), MariaDB 11 |
+| Frontend | React 19, TypeScript, Vite, Tailwind CSS (shadcn/ui), React Query, MSW demo |
+| Infra | Docker Compose, nginx SPA + `/api` proxy, Vercel prototype, Render blueprint (`render.yaml`) |
+| Tests | JUnit/Vitest/Playwright E2E (`api` 67 tests, `ui` 96 tests, 32 E2E per prototype notice) |
 
 ## Layout
 
@@ -105,3 +134,7 @@ Docker/CI — it would hijack the real backend. Demo admin:
 `admin@digisec.local` / `DemoAdmin123!`.
 
 Legacy PHP (`public/`) was removed in `v1.0.0` — recoverable at tag `legacy` and in history (`main` pre-merge).
+
+## License
+
+MIT — see [LICENSE](./LICENSE).
