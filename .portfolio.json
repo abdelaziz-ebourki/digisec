@@ -8,7 +8,7 @@
   "period": { "start": "2026-08", "end": "2026-09" },
   "stack": ["Java 25", "Spring Boot 4.1", "React 19", "TypeScript", "Vite", "Tailwind CSS", "MariaDB 11", "Docker"],
   "repos": [{ "label": "monorepo", "url": "https://github.com/abdelaziz-ebourki/digisec" }],
-  "links": { "demo": "https://ui-nu-coral.vercel.app" },
+  "links": { "demo": "https://digisec.vercel.app" },
   "highlights": {
     "en": [
       "JWT auth with email verification and role-based access",

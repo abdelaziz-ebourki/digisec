@@ -5,11 +5,11 @@
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![MariaDB](https://img.shields.io/badge/MariaDB-11-4169E1?logo=mariadb&logoColor=white)](https://mariadb.org/)
 [![Docker](https://img.shields.io/badge/Docker-compose-2496ED?logo=docker&logoColor=white)](./docker-compose.yml)
-[![Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://ui-nu-coral.vercel.app)
+[![Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://digisec.vercel.app)
 
 Club web application — monorepo containing the React frontend (`ui/`) and the Spring Boot REST API (`api/`).
 
-**Live demo:** https://ui-nu-coral.vercel.app (frontend-only prototype with MSW mock API; demo admin `admin@digisec.local` / `DemoAdmin123!`)
+**Live demo:** https://digisec.vercel.app (frontend-only prototype with MSW mock API; demo admin `admin@digisec.local` / `DemoAdmin123!`)
 
 ![DIGISEC homepage](docs/cover.png)
 
