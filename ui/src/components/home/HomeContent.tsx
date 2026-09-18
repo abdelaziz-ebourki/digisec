@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, ShieldCheck, Users } from 'lucide-react'
-import Autoplay from 'embla-carousel-autoplay'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -9,10 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 import { SectionDivider } from '@/components/layout/SectionDivider'
-
-const CAROUSEL_IMAGES = [1, 2, 4, 5, 6, 7]
 
 export function HomeContent() {
   return (
@@ -63,27 +59,6 @@ export function HomeContent() {
         </div>
       </section>
       <SectionDivider fill="fill-background" wrapperClassName="bg-neutral-950" />
-
-      <section className="mx-auto max-w-6xl px-4 py-16">
-        <Carousel
-          opts={{ align: 'start', loop: true }}
-          plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]}
-          className="w-full"
-        >
-          <CarouselContent>
-            {CAROUSEL_IMAGES.map((image) => (
-              <CarouselItem key={image} className="md:basis-1/2 lg:basis-1/3">
-                <img
-                  src={`/images/carousel/${image}.jpg`}
-                  alt={`Moment fort DIGISEC ${image}`}
-                  loading="lazy"
-                  className="aspect-video w-full rounded-xl object-cover"
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
-      </section>
 
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-20 md:grid-cols-2">
         <div className="order-2 md:order-1">
